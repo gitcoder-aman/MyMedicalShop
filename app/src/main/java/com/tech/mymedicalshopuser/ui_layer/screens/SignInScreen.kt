@@ -35,8 +35,9 @@ import com.tech.mymedicalshopuser.ui.theme.GreenColor
 import com.tech.mymedicalshopuser.ui_layer.common.MulticolorText
 import com.tech.mymedicalshopuser.ui_layer.component.ButtonComponent
 import com.tech.mymedicalshopuser.ui_layer.component.TextFieldComponent
-import com.tech.mymedicalshopuser.ui_layer.navigation.HomeScreen
+import com.tech.mymedicalshopuser.ui_layer.navigation.HomeScreenRoute
 import com.tech.mymedicalshopuser.ui_layer.navigation.SignUpRoute
+import com.tech.mymedicalshopuser.ui_layer.navigation.StartScreenRoute
 
 
 @Composable
@@ -125,7 +126,7 @@ fun SignInScreen(navController: NavHostController) {
                     ButtonComponent(
                         text = "Login"
                     ) {
-                        navController.navigate(HomeScreen)
+                        navController.navigate(HomeScreenRoute)
                     }
 
                     Spacer(Modifier.height(16.dp))

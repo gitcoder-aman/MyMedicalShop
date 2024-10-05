@@ -31,12 +31,13 @@ fun TextFieldComponent(
             Icon(
                 painter = painterResource(leadingIcon),
                 contentDescription = null,
-                modifier = Modifier.size(24.dp)
+                modifier = Modifier.size(24.dp),
+                tint = GreenColor
             )
         },
         modifier = Modifier
             .fillMaxWidth()
-            .background(shape = RoundedCornerShape(8.dp), color = Color.White),
+            .background(shape = RoundedCornerShape(16.dp), color = Color.White),
         shape = RoundedCornerShape(16.dp),
         colors = OutlinedTextFieldDefaults.colors(
             focusedBorderColor = GreenColor,

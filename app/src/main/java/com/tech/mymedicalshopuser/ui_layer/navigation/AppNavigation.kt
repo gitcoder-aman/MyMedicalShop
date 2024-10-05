@@ -1,34 +1,32 @@
 package com.tech.mymedicalshopuser.ui_layer.navigation
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
+import com.tech.mymedicalshopuser.ui_layer.screens.CartScreen
+import com.tech.mymedicalshopuser.ui_layer.screens.HomeScreen
+import com.tech.mymedicalshopuser.ui_layer.screens.OrderScreen
+import com.tech.mymedicalshopuser.ui_layer.screens.ProfileScreen
 import com.tech.mymedicalshopuser.ui_layer.screens.SignInScreen
 import com.tech.mymedicalshopuser.ui_layer.screens.SignupScreen
+import com.tech.mymedicalshopuser.ui_layer.screens.StartScreen
 
 @Composable
-fun AppNavigation() {
-
-    val navController = rememberNavController()
-
+fun AppNavigation(navController: NavHostController) {
     NavHost(navController = navController, startDestination = SignInRoute) {
 
-        composable<StartScreen> {
-            Box(modifier = Modifier.fillMaxSize()) {
-                CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
-            }
-            val userLogin = false
-            if (userLogin) {
-                navController.navigate(HomeScreen)
-            } else {
-                navController.navigate(SignUpRoute)
-            }
+        composable<StartScreenRoute> {
+//            Box(modifier = Modifier.fillMaxSize()) {
+//                CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+//            }
+//            val userLogin = false
+//            if (userLogin) {
+//                navController.navigate(HomeScreenRoute)
+//            } else {
+//                navController.navigate(SignUpRoute)
+//            }
+            StartScreen(navController)
         }
         composable<SignInRoute> {
             SignInScreen(navController)
@@ -36,8 +34,17 @@ fun AppNavigation() {
         composable<SignUpRoute> {
             SignupScreen(navController)
         }
-        composable<HomeScreen> {
-
+        composable<HomeScreenRoute> {
+            HomeScreen(navController)
+        }
+        composable<CartScreenRoute> {
+            CartScreen(navController)
+        }
+        composable<OrderScreenRoute> {
+            OrderScreen(navController)
+        }
+        composable<ProfileScreenRoute> {
+            ProfileScreen(navController)
         }
 
     }

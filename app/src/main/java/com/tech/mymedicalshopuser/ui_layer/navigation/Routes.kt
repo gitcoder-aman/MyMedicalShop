@@ -10,7 +10,16 @@ object SignInRoute
 object SignUpRoute
 
 @Serializable
-object StartScreen
+object StartScreenRoute
 
 @Serializable
-object HomeScreen
+object HomeScreenRoute
+
+@Serializable
+object CartScreenRoute
+
+@Serializable
+object OrderScreenRoute
+
+@Serializable
+object ProfileScreenRoute

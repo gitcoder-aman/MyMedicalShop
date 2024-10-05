@@ -96,4 +96,11 @@ dependencies {
     //for image loading
     implementation(libs.coil.compose)
 
+    //accompanist for pager
+    implementation(libs.accompanist.pager)
+    implementation(libs.accompanist.pager.indicators)
+
+    implementation(libs.accompanist.systemuicontroller)
+
+
 }
