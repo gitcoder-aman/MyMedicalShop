@@ -42,7 +42,8 @@ fun ClientItemView(
     itemImage: Int,
     price: String,
     rating: String,
-    itemName: String
+    itemName: String,
+    onClick:()->Unit
 ) {
     Card(
         modifier = Modifier.padding(4.dp)
@@ -50,7 +51,9 @@ fun ClientItemView(
             .width(150.dp),
         shape = RoundedCornerShape(16.dp),
         elevation = 4.dp,
-        onClick = {}
+        onClick = {
+            onClick()
+        }
     ) {
         Column(
             modifier = Modifier.fillMaxSize(),

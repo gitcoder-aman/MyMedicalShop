@@ -23,3 +23,6 @@ object OrderScreenRoute
 
 @Serializable
 object ProfileScreenRoute
+
+@Serializable
+object ProductDetailScreenRoute

@@ -48,6 +48,8 @@ import com.tech.mymedicalshopuser.ui_layer.component.CategoryItem
 import com.tech.mymedicalshopuser.ui_layer.component.ClientItemView
 import com.tech.mymedicalshopuser.ui_layer.component.PagerSlider
 import com.tech.mymedicalshopuser.ui_layer.component.TextFieldComponent
+import com.tech.mymedicalshopuser.ui_layer.navigation.CartScreenRoute
+import com.tech.mymedicalshopuser.ui_layer.navigation.ProductDetailScreenRoute
 
 @Composable
 fun HomeScreen(navController: NavHostController) {
@@ -128,7 +130,9 @@ fun HomeScreen(navController: NavHostController) {
                             CategoryItem(
                                 itemName = it.itemName,
                                 itemImage = it.itemImage
-                            )
+                            ){
+
+                            }
                         }
                     }
                     Spacer(Modifier.height(8.dp))
@@ -174,7 +178,9 @@ fun HomeScreen(navController: NavHostController) {
                                 price = it.price,
                                 rating = it.rating,
                                 itemName = it.itemName
-                            )
+                            ){
+                                navController.navigate(ProductDetailScreenRoute)
+                            }
                         }
                     }
                     Spacer(Modifier.height(8.dp))
@@ -218,7 +224,10 @@ fun HomeScreen(navController: NavHostController) {
                                 price = it.price,
                                 rating = it.rating,
                                 itemName = it.itemName
-                            )
+                            ){
+                                navController.navigate(ProductDetailScreenRoute)
+
+                            }
                         }
                     }
 

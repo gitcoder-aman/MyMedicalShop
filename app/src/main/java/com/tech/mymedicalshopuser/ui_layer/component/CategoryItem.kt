@@ -31,12 +31,12 @@ import com.tech.mymedicalshopuser.ui.theme.WhiteGreyColor
 @Composable
 fun CategoryItem(
     itemName: String,
-    itemImage : Int
+    itemImage : Int,
+    onClick:()->Unit
 ) {
     Column(
         modifier = Modifier
-            .padding(8.dp)
-            ,
+            .padding(8.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {

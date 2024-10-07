@@ -4,13 +4,14 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.tech.mymedicalshopuser.ui_layer.screens.CartScreen
+import com.tech.mymedicalshopuser.ui_layer.screens.cart_screen.CartScreen
 import com.tech.mymedicalshopuser.ui_layer.screens.HomeScreen
 import com.tech.mymedicalshopuser.ui_layer.screens.OrderScreen
 import com.tech.mymedicalshopuser.ui_layer.screens.ProfileScreen
 import com.tech.mymedicalshopuser.ui_layer.screens.SignInScreen
 import com.tech.mymedicalshopuser.ui_layer.screens.SignupScreen
 import com.tech.mymedicalshopuser.ui_layer.screens.StartScreen
+import com.tech.mymedicalshopuser.ui_layer.screens.product_detail.ProductDetailScreen
 
 @Composable
 fun AppNavigation(navController: NavHostController) {
@@ -45,6 +46,9 @@ fun AppNavigation(navController: NavHostController) {
         }
         composable<ProfileScreenRoute> {
             ProfileScreen(navController)
+        }
+        composable<ProductDetailScreenRoute> {
+            ProductDetailScreen(navController)
         }
 
     }

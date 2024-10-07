@@ -1,26 +1,21 @@
 package com.tech.mymedicalshopuser
 
+import android.annotation.SuppressLint
 import android.os.Bundle
-import android.widget.Toast
+import android.util.Log
 import androidx.activity.ComponentActivity
-import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.rememberNavController
-import com.tech.mymedicalshopuser.ui.theme.MyMedicalShopUserTheme
-import com.tech.mymedicalshopuser.ui_layer.bottomNavigation.NavigationView
+import com.tech.mymedicalshopuser.data.ApiProvider
 import com.tech.mymedicalshopuser.ui_layer.navigation.AppNavigation
-import com.tech.mymedicalshopuser.ui_layer.navigation.HomeScreenRoute
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
+    @OptIn(DelicateCoroutinesApi::class)
+    @SuppressLint("CoroutineCreationDuringComposition")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 //        enableEdgeToEdge()
@@ -29,6 +24,18 @@ class MainActivity : ComponentActivity() {
                 val navController = rememberNavController()
 
                 AppNavigation(navController)
+
+//                GlobalScope.launch(Dispatchers.IO) {
+//
+//                    val response = ApiProvider.api().getAllUsers()
+//                    if(response.isSuccessful){
+//                        val data = response.body()
+//                        Log.d("@response", "onCreate: $data")
+//
+//                    }else{
+//                        Log.d("@response", "onCreate: Something went wrong")
+//                    }
+//                }
 
             }
         }
