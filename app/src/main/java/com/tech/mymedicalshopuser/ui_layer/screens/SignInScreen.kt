@@ -1,5 +1,7 @@
 package com.tech.mymedicalshopuser.ui_layer.screens
 
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -14,14 +16,16 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
@@ -29,25 +33,71 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+
 import androidx.navigation.NavHostController
 import com.tech.mymedicalshopuser.R
+import com.tech.mymedicalshopuser.state.MedicalResponseState
 import com.tech.mymedicalshopuser.ui.theme.GreenColor
 import com.tech.mymedicalshopuser.ui_layer.common.MulticolorText
 import com.tech.mymedicalshopuser.ui_layer.component.ButtonComponent
 import com.tech.mymedicalshopuser.ui_layer.component.TextFieldComponent
 import com.tech.mymedicalshopuser.ui_layer.navigation.HomeScreenRoute
 import com.tech.mymedicalshopuser.ui_layer.navigation.SignUpRoute
-import com.tech.mymedicalshopuser.ui_layer.navigation.StartScreenRoute
-
+import com.tech.mymedicalshopuser.viewmodel.MedicalAuthViewmodel
 
 @Composable
-fun SignInScreen(navController: NavHostController) {
+fun SignInScreen(
+    navController: NavHostController,
+    medicalAuthViewmodel: MedicalAuthViewmodel =  hiltViewModel()
+) {
 
-    var email by remember {
+    val context = LocalContext.current
+    val loginResponseState by medicalAuthViewmodel.loginResponseState.collectAsState()
+    val loginScreenState by medicalAuthViewmodel.loginScreenStateData.collectAsState()
+    if(loginScreenState.email.value.isEmpty() && loginScreenState.password.value.isEmpty()){
+        medicalAuthViewmodel.loadLoginStateDataAfterDestroyScreen()
+    }else{
+        medicalAuthViewmodel.saveLoginStateDataBeforeDestroyScreen()
+    }
+    val password by remember {
         mutableStateOf("")
     }
-    var password by remember {
-        mutableStateOf("")
+
+    when (loginResponseState) {
+        is MedicalResponseState.Loading -> {
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                Text(text = "Loading...")
+            }
+        }
+
+        is MedicalResponseState.Success -> {
+            val response = (loginResponseState as MedicalResponseState.Success).data
+
+            LaunchedEffect(Unit) {
+                if (response.body()?.message != null) {
+                    medicalAuthViewmodel.resetLoginStateData()
+                    navController.navigate(HomeScreenRoute)
+
+                    Toast.makeText(
+                        context,
+                        "Login Successfully ${response.body()?.message}",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                } else {
+                    Toast.makeText(context, "Login Failed", Toast.LENGTH_SHORT).show()
+                }
+            }
+            Log.d("@@login", "SignInScreen: ${response.body()?.message}")
+            Log.d("@@login", "SignInScreen: ${response.body()?.status}")
+        }
+
+        is MedicalResponseState.Error -> {
+            val response = (loginResponseState as MedicalResponseState.Error).message
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                Text(text = response)
+            }
+        }
     }
 
     LazyColumn(
@@ -108,17 +158,17 @@ fun SignInScreen(navController: NavHostController) {
 
                     Spacer(Modifier.height(8.dp))
                     TextFieldComponent(
-                        value = email,
+                        value = loginScreenState.email.value,
                         onValueChange = {
-                            email = it
+                            loginScreenState.email.value = it
                         }, placeholder = "Email",
                         leadingIcon = R.drawable.email
                     )
                     Spacer(Modifier.height(8.dp))
                     TextFieldComponent(
-                        value = password,
+                        value = loginScreenState.password.value,
                         onValueChange = {
-                            password = it
+                            loginScreenState.password.value = it
                         }, placeholder = "Password",
                         leadingIcon = R.drawable.password
                     )
@@ -126,7 +176,12 @@ fun SignInScreen(navController: NavHostController) {
                     ButtonComponent(
                         text = "Login"
                     ) {
-                        navController.navigate(HomeScreenRoute)
+
+                        medicalAuthViewmodel.loginUser(
+                            email = loginScreenState.email.value,
+                            password = loginScreenState.password.value
+                        )
+
                     }
 
                     Spacer(Modifier.height(16.dp))
@@ -135,6 +190,7 @@ fun SignInScreen(navController: NavHostController) {
                         firstText = "DON'T HAVE AN ACCOUNT? ",
                         secondText = "SIGN UP"
                     ) {
+//                        medicalViewModel.storeLoginStateDataBeforeDestroyScreen()
                         navController.navigate(SignUpRoute) {
                             navController.popBackStack()
                         }

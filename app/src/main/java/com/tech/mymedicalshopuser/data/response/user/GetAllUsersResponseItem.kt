@@ -1,4 +1,4 @@
-package com.tech.mymedicalshopuser.data.response
+package com.tech.mymedicalshopuser.data.response.user
 
 data class GetAllUsersResponseItem(
     val address: String,

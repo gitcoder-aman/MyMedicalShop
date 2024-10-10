@@ -1,4 +1,4 @@
-package com.tech.mymedicalshopuser.data.model
+package com.tech.mymedicalshopuser.domain.model
 
 import com.tech.mymedicalshopuser.R
 

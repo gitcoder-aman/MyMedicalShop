@@ -39,8 +39,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.tech.mymedicalshopuser.R
-import com.tech.mymedicalshopuser.data.model.categoryList
-import com.tech.mymedicalshopuser.data.model.clientChoiceList
+import com.tech.mymedicalshopuser.domain.model.categoryList
+import com.tech.mymedicalshopuser.domain.model.clientChoiceList
 import com.tech.mymedicalshopuser.ui.theme.GreenColor
 import com.tech.mymedicalshopuser.ui.theme.LightGreenColor
 import com.tech.mymedicalshopuser.ui_layer.bottomNavigation.NavigationView
@@ -48,7 +48,6 @@ import com.tech.mymedicalshopuser.ui_layer.component.CategoryItem
 import com.tech.mymedicalshopuser.ui_layer.component.ClientItemView
 import com.tech.mymedicalshopuser.ui_layer.component.PagerSlider
 import com.tech.mymedicalshopuser.ui_layer.component.TextFieldComponent
-import com.tech.mymedicalshopuser.ui_layer.navigation.CartScreenRoute
 import com.tech.mymedicalshopuser.ui_layer.navigation.ProductDetailScreenRoute
 
 @Composable

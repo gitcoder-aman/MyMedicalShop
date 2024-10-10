@@ -1,21 +1,26 @@
 package com.tech.mymedicalshopuser
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.rememberNavController
-import com.tech.mymedicalshopuser.data.ApiProvider
 import com.tech.mymedicalshopuser.ui_layer.navigation.AppNavigation
+import com.tech.mymedicalshopuser.utils.PreferenceManager
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     @OptIn(DelicateCoroutinesApi::class)
     @SuppressLint("CoroutineCreationDuringComposition")
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 //        enableEdgeToEdge()
@@ -24,19 +29,6 @@ class MainActivity : ComponentActivity() {
                 val navController = rememberNavController()
 
                 AppNavigation(navController)
-
-//                GlobalScope.launch(Dispatchers.IO) {
-//
-//                    val response = ApiProvider.api().getAllUsers()
-//                    if(response.isSuccessful){
-//                        val data = response.body()
-//                        Log.d("@response", "onCreate: $data")
-//
-//                    }else{
-//                        Log.d("@response", "onCreate: Something went wrong")
-//                    }
-//                }
-
             }
         }
     }

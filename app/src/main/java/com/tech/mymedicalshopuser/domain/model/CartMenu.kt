@@ -1,6 +1,4 @@
-package com.tech.mymedicalshopuser.data.model
-
-import com.tech.mymedicalshopuser.R
+package com.tech.mymedicalshopuser.domain.model
 
 data class CartMenu(
     var itemIndex: Int = -1,
