@@ -53,11 +53,11 @@ fun SignupScreen(
     val context = LocalContext.current
     val signupResponseState by medicalAuthViewmodel.signupResponseState.collectAsState()
     val signupScreenState by medicalAuthViewmodel.signupScreenStateData.collectAsState()
-    if (signupScreenState.userName.value.isEmpty() && signupScreenState.mobileNo.value.isEmpty() && signupScreenState.email.value.isEmpty() && signupScreenState.password.value.isEmpty() && signupScreenState.address.value.isEmpty() && signupScreenState.pinCode.value.isEmpty()) {
-        medicalAuthViewmodel.loadSignUpStateDataAfterDestroyScreen()
-    } else {
-        medicalAuthViewmodel.saveSignUpStateDataBeforeDestroyScreen()
-    }
+//    if (signupScreenState.userName.value.isEmpty() && signupScreenState.mobileNo.value.isEmpty() && signupScreenState.email.value.isEmpty() && signupScreenState.password.value.isEmpty() && signupScreenState.address.value.isEmpty() && signupScreenState.pinCode.value.isEmpty()) {
+//        medicalAuthViewmodel.loadSignUpStateDataAfterDestroyScreen()
+//    } else {
+//        medicalAuthViewmodel.saveSignUpStateDataBeforeDestroyScreen()
+//    }
 
     when (signupResponseState) {
         is MedicalResponseState.Loading -> {

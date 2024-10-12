@@ -7,8 +7,10 @@ import com.tech.mymedicalshopuser.state.MedicalSignInScreenState
 import com.tech.mymedicalshopuser.state.MedicalSignupScreenState
 
 class PreferenceManager(private val context: Context) {
-    private val sharedPreferencesSignup = context.getSharedPreferences("SignupPrefs", Context.MODE_PRIVATE)
-    private val sharedPreferencesLogin = context.getSharedPreferences("LoginPrefs", Context.MODE_PRIVATE)
+    private val isLogin = context.getSharedPreferences("isLoggedIn", MODE_PRIVATE)
+    private val isApprove = context.getSharedPreferences("isApproved", MODE_PRIVATE)
+    private val sharedPreferencesSignup = context.getSharedPreferences("SignupPrefs", MODE_PRIVATE)
+    private val sharedPreferencesLogin = context.getSharedPreferences("LoginPrefs", MODE_PRIVATE)
 
     fun saveSignupData(signupScreenState: MedicalSignupScreenState) {
         with(sharedPreferencesSignup.edit()) {
@@ -46,4 +48,26 @@ class PreferenceManager(private val context: Context) {
             password = mutableStateOf(sharedPreferencesLogin.getString("password", "") ?: "")
         )
     }
+
+    //for already login or not
+    fun setLoginUserId(userId: String) {
+        with(isLogin.edit()) {
+            putString("isLoggedIn", userId)
+            apply()
+        }
+    }
+
+    fun getLoginUserId(): String? {
+        return isLogin.getString("isLoggedIn", "")
+    }
+    fun setApprovedStatus(isApproved: Int) {
+        with(isApprove.edit()) {
+            putInt("isApproved", isApproved)
+            apply()
+        }
+    }
+    fun getApprovedStatus(): Int {
+        return isApprove.getInt("isApproved", 0)
+    }
+
 }

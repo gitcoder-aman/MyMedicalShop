@@ -20,8 +20,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -44,25 +42,18 @@ import com.tech.mymedicalshopuser.ui_layer.component.ButtonComponent
 import com.tech.mymedicalshopuser.ui_layer.component.TextFieldComponent
 import com.tech.mymedicalshopuser.ui_layer.navigation.HomeScreenRoute
 import com.tech.mymedicalshopuser.ui_layer.navigation.SignUpRoute
+import com.tech.mymedicalshopuser.ui_layer.navigation.VerificationScreenRoute
+import com.tech.mymedicalshopuser.viewmodel.MainViewmodel
 import com.tech.mymedicalshopuser.viewmodel.MedicalAuthViewmodel
 
 @Composable
 fun SignInScreen(
     navController: NavHostController,
-    medicalAuthViewmodel: MedicalAuthViewmodel =  hiltViewModel()
+    medicalAuthViewmodel: MedicalAuthViewmodel
 ) {
-
     val context = LocalContext.current
     val loginResponseState by medicalAuthViewmodel.loginResponseState.collectAsState()
     val loginScreenState by medicalAuthViewmodel.loginScreenStateData.collectAsState()
-    if(loginScreenState.email.value.isEmpty() && loginScreenState.password.value.isEmpty()){
-        medicalAuthViewmodel.loadLoginStateDataAfterDestroyScreen()
-    }else{
-        medicalAuthViewmodel.saveLoginStateDataBeforeDestroyScreen()
-    }
-    val password by remember {
-        mutableStateOf("")
-    }
 
     when (loginResponseState) {
         is MedicalResponseState.Loading -> {
@@ -73,21 +64,27 @@ fun SignInScreen(
 
         is MedicalResponseState.Success -> {
             val response = (loginResponseState as MedicalResponseState.Success).data
-
             LaunchedEffect(Unit) {
                 if (response.body()?.message != null) {
                     medicalAuthViewmodel.resetLoginStateData()
-                    navController.navigate(HomeScreenRoute)
+                    medicalAuthViewmodel.preferenceManager.setLoginUserId(response.body()!!.message)
 
+                    navController.navigate(
+                        VerificationScreenRoute(response.body()?.message!!)
+                    ) {
+                        navController.popBackStack()
+                    }
                     Toast.makeText(
                         context,
                         "Login Successfully ${response.body()?.message}",
                         Toast.LENGTH_SHORT
                     ).show()
                 } else {
+                    medicalAuthViewmodel.preferenceManager.setLoginUserId(response.body()!!.message)
                     Toast.makeText(context, "Login Failed", Toast.LENGTH_SHORT).show()
                 }
             }
+
             Log.d("@@login", "SignInScreen: ${response.body()?.message}")
             Log.d("@@login", "SignInScreen: ${response.body()?.status}")
         }
@@ -190,7 +187,6 @@ fun SignInScreen(
                         firstText = "DON'T HAVE AN ACCOUNT? ",
                         secondText = "SIGN UP"
                     ) {
-//                        medicalViewModel.storeLoginStateDataBeforeDestroyScreen()
                         navController.navigate(SignUpRoute) {
                             navController.popBackStack()
                         }

@@ -2,10 +2,12 @@ package com.tech.mymedicalshopuser.viewmodel
 
 import android.content.Context
 import android.content.Context.MODE_PRIVATE
+import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tech.mymedicalshopuser.data.response.signupLogin.SignupLoginResponse
+import com.tech.mymedicalshopuser.data.response.user.GetAllUsersResponseItem
 import com.tech.mymedicalshopuser.domain.repository.MedicalRepository
 import com.tech.mymedicalshopuser.state.MedicalResponseState
 import com.tech.mymedicalshopuser.state.MedicalSignInScreenState
@@ -13,9 +15,11 @@ import com.tech.mymedicalshopuser.state.MedicalSignupScreenState
 import com.tech.mymedicalshopuser.utils.PreferenceManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import retrofit2.Response
@@ -23,12 +27,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MedicalAuthViewmodel @Inject constructor(
-    @ApplicationContext private val context: Context,
+    @ApplicationContext context: Context,
     private val medicalRepository: MedicalRepository
 ) : ViewModel() {
 
-    private val preferenceManager = PreferenceManager(context)
-
+    val preferenceManager = PreferenceManager(context)
     private val _signupResponseState =
         MutableStateFlow<MedicalResponseState<Response<SignupLoginResponse>>>(MedicalResponseState.Loading)
     val signupResponseState = _signupResponseState.asStateFlow()
@@ -49,6 +52,7 @@ class MedicalAuthViewmodel @Inject constructor(
         started = SharingStarted.WhileSubscribed(5000),
         initialValue = MedicalSignInScreenState()
     )
+
 
     fun signupUser(
         name: String,
@@ -102,32 +106,12 @@ class MedicalAuthViewmodel @Inject constructor(
             password = mutableStateOf(""),
             address = mutableStateOf(""),
         )
-        val sharedPreferencesSignup = context.getSharedPreferences("SignupPrefs", MODE_PRIVATE)
-//        val sharedPreferencesLogin = context.getSharedPreferences("LoginPrefs", MODE_PRIVATE)
-        sharedPreferencesSignup.edit().clear().apply()
-//        sharedPreferencesLogin.edit().clear().apply()
     }
     fun resetLoginStateData() {
         _loginScreenStateData.value = MedicalSignInScreenState(
             email = mutableStateOf(""),
             password = mutableStateOf("")
         )
-    }
-    fun saveSignUpStateDataBeforeDestroyScreen(){
-        preferenceManager.saveSignupData(
-            signupScreenState = signupScreenStateData.value
-        )
-    }
-    fun loadSignUpStateDataAfterDestroyScreen(){
-        _signupScreenStateData.value = preferenceManager.loadSignupData()
-    }
-    fun saveLoginStateDataBeforeDestroyScreen(){
-        preferenceManager.saveLoginData(
-            loginScreenState = loginScreenStateData.value
-        )
-    }
-    fun loadLoginStateDataAfterDestroyScreen(){
-        _loginScreenStateData.value = preferenceManager.loadLoginData()
     }
 
 }

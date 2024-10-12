@@ -2,6 +2,7 @@ package com.tech.mymedicalshopuser.data.repository
 
 import com.tech.mymedicalshopuser.data.services.ApiServices
 import com.tech.mymedicalshopuser.data.response.signupLogin.SignupLoginResponse
+import com.tech.mymedicalshopuser.data.response.user.GetAllUsersResponseItem
 import com.tech.mymedicalshopuser.domain.repository.MedicalRepository
 import retrofit2.Response
 import javax.inject.Inject
@@ -26,6 +27,10 @@ class MedicalRepositoryImpl @Inject constructor(
         password: String
     ): Response<SignupLoginResponse> {
         return apiServices.loginUser(email = email,password = password)
+    }
+
+    override suspend fun getSpecificUser(userId: String): Response<ArrayList<GetAllUsersResponseItem>> {
+        return apiServices.getSpecificUser(userId)
     }
 
 }

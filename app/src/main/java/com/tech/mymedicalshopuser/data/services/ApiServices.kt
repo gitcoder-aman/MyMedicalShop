@@ -30,4 +30,10 @@ interface ApiServices {
         @Field("email") email : String,
         @Field("password") password : String
     ): Response<SignupLoginResponse>
+
+    @FormUrlEncoded
+    @POST("getSpecificUser")
+    suspend fun getSpecificUser(
+        @Field("userId") userId : String,
+    ): Response<ArrayList<GetAllUsersResponseItem>>
 }

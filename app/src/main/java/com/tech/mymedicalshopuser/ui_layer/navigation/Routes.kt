@@ -26,3 +26,8 @@ object ProfileScreenRoute
 
 @Serializable
 object ProductDetailScreenRoute
+
+@Serializable
+data class VerificationScreenRoute(
+    val userId : String
+)

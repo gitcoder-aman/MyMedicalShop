@@ -102,5 +102,8 @@ dependencies {
 
     implementation(libs.accompanist.systemuicontroller)
 
+    implementation(libs.lottie.compose)
+
+
 
 }
