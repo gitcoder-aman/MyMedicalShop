@@ -35,12 +35,10 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.tech.mymedicalshopuser.R
-import com.tech.mymedicalshopuser.state.MedicalResponseState
 import com.tech.mymedicalshopuser.ui.theme.GreenColor
 import com.tech.mymedicalshopuser.ui_layer.common.MulticolorText
 import com.tech.mymedicalshopuser.ui_layer.component.ButtonComponent
 import com.tech.mymedicalshopuser.ui_layer.component.TextFieldComponent
-import com.tech.mymedicalshopuser.ui_layer.navigation.HomeScreenRoute
 import com.tech.mymedicalshopuser.ui_layer.navigation.SignInRoute
 import com.tech.mymedicalshopuser.utils.ISOK
 import com.tech.mymedicalshopuser.viewmodel.MedicalAuthViewmodel
@@ -53,44 +51,45 @@ fun SignupScreen(
     val context = LocalContext.current
     val signupResponseState by medicalAuthViewmodel.signupResponseState.collectAsState()
     val signupScreenState by medicalAuthViewmodel.signupScreenStateData.collectAsState()
-//    if (signupScreenState.userName.value.isEmpty() && signupScreenState.mobileNo.value.isEmpty() && signupScreenState.email.value.isEmpty() && signupScreenState.password.value.isEmpty() && signupScreenState.address.value.isEmpty() && signupScreenState.pinCode.value.isEmpty()) {
-//        medicalAuthViewmodel.loadSignUpStateDataAfterDestroyScreen()
-//    } else {
-//        medicalAuthViewmodel.saveSignUpStateDataBeforeDestroyScreen()
-//    }
 
-    when (signupResponseState) {
-        is MedicalResponseState.Loading -> {
+    when {
+        signupResponseState.isLoading -> {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 Text(text = "Loading...")
             }
         }
 
-        is MedicalResponseState.Success -> {
-            val response = (signupResponseState as MedicalResponseState.Success).data
+        signupResponseState.data != null -> {
             LaunchedEffect(Unit) {
-                if (response.body()?.status == ISOK) {
-                    medicalAuthViewmodel.resetSignupStateData()
+                if (signupResponseState.data!!.status == ISOK) {
+                val userId = signupResponseState.data!!.message
                     navController.navigate(SignInRoute)
+
+                    medicalAuthViewmodel.preferenceManager.setLoginUserName(signupScreenState.userName.value)
+                    medicalAuthViewmodel.preferenceManager.setLoginAddress(signupScreenState.address.value)
+                    medicalAuthViewmodel.preferenceManager.setLoginPinCode(signupScreenState.pinCode.value)
+                    medicalAuthViewmodel.preferenceManager.setLoginEmailId(signupScreenState.email.value)
+                    medicalAuthViewmodel.preferenceManager.setLoginMobileNo(signupScreenState.mobileNo.value)
+
+                    medicalAuthViewmodel.resetSignupScreenStateData()
 
                     Toast.makeText(
                         context,
-                        "Register User Successfully ${response.body()?.message}",
+                        "Register User Successfully $userId",
                         Toast.LENGTH_SHORT
                     ).show()
                 } else {
-                    Toast.makeText(context, "Failed ${response.body()?.message}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "Failed ${signupResponseState.data!!.message}", Toast.LENGTH_SHORT).show()
                 }
             }
 
-            Log.d("@@signup", "SignupScreen: ${response.body()?.message}")
-            Log.d("@@signup", "SignupScreen: ${response.body()?.status}")
+            Log.d("@@signup", "SignupScreen: ${signupResponseState.data!!.message}")
+            Log.d("@@signup", "SignupScreen: ${signupResponseState.data!!.status}")
         }
 
-        is MedicalResponseState.Error -> {
-            val response = (signupResponseState as MedicalResponseState.Error).message
+        signupResponseState.error != null -> {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text(text = response)
+                Text(text = signupResponseState.error!!)
             }
         }
     }

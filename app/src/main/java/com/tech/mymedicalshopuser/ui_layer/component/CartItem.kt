@@ -29,22 +29,25 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.tech.mymedicalshopuser.R
+import com.tech.mymedicalshopuser.domain.model.ClientChoiceModel
 import com.tech.mymedicalshopuser.ui.theme.GreenColor
 
-@Preview
 @Composable
 fun CartItem(
-//    count : Int,
-//    itemIndex: Int, itemMenu: ItemMenu, itemOnClick: () -> Unit, onDelete: () -> Unit,
-//    increaseItem: () -> Unit,
-//    decreaseItem: () -> Unit
+    count: Int,
+    itemOnClick: () -> Unit,
+    onDelete: () -> Unit,
+    increaseItem: () -> Unit,
+    decreaseItem: () -> Unit,
+    productItem: ClientChoiceModel
 ) {
     Card(
-        onClick = { },
+        onClick = {
+            itemOnClick()
+        },
         modifier = Modifier
             .padding(top = 5.dp, bottom = 5.dp)
             .fillMaxWidth()
@@ -78,14 +81,14 @@ fun CartItem(
                 horizontalAlignment = Alignment.Start
             ) {
                 Text(
-                    text = "Paracetamol", style = TextStyle(
+                    text = productItem.product_name, style = TextStyle(
                         fontSize = 18.sp,
                         fontWeight = FontWeight.W400,
                         fontFamily = FontFamily(Font(R.font.roboto_bold))
                     ), maxLines = 1
                 )
                 Text(
-                    text = "20$", style = TextStyle(
+                    text = productItem.product_price.toString(), style = TextStyle(
                         fontSize = 22.sp,
                         fontWeight = FontWeight.W400,
                         fontFamily = FontFamily(Font(R.font.roboto_medium)),
@@ -115,11 +118,11 @@ fun CartItem(
                                 interactionSource = remember { MutableInteractionSource() },
                                 indication = null
                             ) {
-//                                    decreaseItem()
+                                decreaseItem()
                             }, tint = Color.Unspecified
                     )
                     Text(
-                        text = "3", style = TextStyle(
+                        text = count.toString(), style = TextStyle(
                             fontSize = 22.sp,
                             fontWeight = FontWeight.W200,
                             fontFamily = FontFamily(Font(R.font.roboto_regular)),
@@ -135,7 +138,7 @@ fun CartItem(
                                 interactionSource = remember { MutableInteractionSource() },
                                 indication = null
                             ) {
-//                                    increaseItem()
+                                increaseItem()
                             }, tint = Color.Unspecified
                     )
 //                        val cartMenu = CartMenu(itemCount = count, itemIndex = itemIndex)
@@ -143,7 +146,7 @@ fun CartItem(
                 }
                 IconButton(
                     onClick = {  //delete functionality data from firebase
-//                        onDelete()
+                        onDelete()
                     }
                 ) {
                     Icon(

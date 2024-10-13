@@ -1,28 +1,22 @@
 package com.tech.mymedicalshopuser.viewmodel
 
 import android.content.Context
-import android.content.Context.MODE_PRIVATE
-import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.tech.mymedicalshopuser.data.response.signupLogin.SignupLoginResponse
-import com.tech.mymedicalshopuser.data.response.user.GetAllUsersResponseItem
 import com.tech.mymedicalshopuser.domain.repository.MedicalRepository
+import com.tech.mymedicalshopuser.state.MedicalAuthResponseSate
 import com.tech.mymedicalshopuser.state.MedicalResponseState
-import com.tech.mymedicalshopuser.state.MedicalSignInScreenState
-import com.tech.mymedicalshopuser.state.MedicalSignupScreenState
+import com.tech.mymedicalshopuser.state.screen_state.MedicalSignInScreenState
+import com.tech.mymedicalshopuser.state.screen_state.MedicalSignupScreenState
 import com.tech.mymedicalshopuser.utils.PreferenceManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import retrofit2.Response
 import javax.inject.Inject
 
 @HiltViewModel
@@ -32,12 +26,10 @@ class MedicalAuthViewmodel @Inject constructor(
 ) : ViewModel() {
 
     val preferenceManager = PreferenceManager(context)
-    private val _signupResponseState =
-        MutableStateFlow<MedicalResponseState<Response<SignupLoginResponse>>>(MedicalResponseState.Loading)
+    private val _signupResponseState = MutableStateFlow(MedicalAuthResponseSate())
     val signupResponseState = _signupResponseState.asStateFlow()
 
-    private val _loginResponseState =
-        MutableStateFlow<MedicalResponseState<Response<SignupLoginResponse>>>(MedicalResponseState.Loading)
+    private val _loginResponseState = MutableStateFlow(MedicalAuthResponseSate())
     val loginResponseState = _loginResponseState.asStateFlow()
 
     private val _signupScreenStateData = MutableStateFlow(MedicalSignupScreenState())
@@ -63,20 +55,27 @@ class MedicalAuthViewmodel @Inject constructor(
         pinCode: String
     ) {
         viewModelScope.launch {
-            try {
-                _signupResponseState.value = MedicalResponseState.Loading
-                val signupResponse = medicalRepository.signupUser(
-                    name = name,
-                    email = email,
-                    phoneNumber = phoneNumber,
-                    password = password,
-                    address = address,
-                    pinCode = pinCode
-                )
-                _signupResponseState.value = MedicalResponseState.Success(signupResponse)
+            medicalRepository.signupUser(
+                name = name,
+                email = email,
+                phoneNumber = phoneNumber,
+                password = password,
+                address = address,
+                pinCode = pinCode
+            ).collect {
+                when (it) {
+                    is MedicalResponseState.Loading -> {
+                        _signupResponseState.value = MedicalAuthResponseSate(isLoading = true)
+                    }
 
-            } catch (e: Exception) {
-                _signupResponseState.value = MedicalResponseState.Error(e.message ?: "An error occurred")
+                    is MedicalResponseState.Success -> {
+                        _signupResponseState.value = MedicalAuthResponseSate(data = it.data.body())
+                    }
+
+                    is MedicalResponseState.Error -> {
+                        _signupResponseState.value = MedicalAuthResponseSate(error = it.message)
+                    }
+                }
             }
         }
     }
@@ -86,19 +85,28 @@ class MedicalAuthViewmodel @Inject constructor(
         password: String
     ) {
         viewModelScope.launch {
-            try {
-                _loginResponseState.value = MedicalResponseState.Loading
-                val loginResponse = medicalRepository.loginUser(
-                    email = email,
-                    password = password
-                )
-                _loginResponseState.value = MedicalResponseState.Success(loginResponse)
-            } catch (e: Exception) {
-                _loginResponseState.value = MedicalResponseState.Error(e.message ?: "An error occurred")
+            medicalRepository.loginUser(
+                email = email,
+                password = password
+            ).collect {
+                when (it) {
+                    is MedicalResponseState.Loading -> {
+                        _loginResponseState.value = MedicalAuthResponseSate(isLoading = true)
+                    }
+
+                    is MedicalResponseState.Success -> {
+                        _loginResponseState.value = MedicalAuthResponseSate(data = it.data.body())
+                    }
+
+                    is MedicalResponseState.Error -> {
+                        _loginResponseState.value = MedicalAuthResponseSate(error = it.message)
+                    }
+                }
             }
         }
     }
-    fun resetSignupStateData() {
+
+    fun resetSignupScreenStateData() {
         _signupScreenStateData.value = MedicalSignupScreenState(
             userName = mutableStateOf(""),
             mobileNo = mutableStateOf(""),
@@ -107,11 +115,11 @@ class MedicalAuthViewmodel @Inject constructor(
             address = mutableStateOf(""),
         )
     }
-    fun resetLoginStateData() {
+
+    fun resetLoginScreenStateData() {
         _loginScreenStateData.value = MedicalSignInScreenState(
             email = mutableStateOf(""),
             password = mutableStateOf("")
         )
     }
-
 }

@@ -28,7 +28,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
@@ -36,7 +35,6 @@ import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.tech.mymedicalshopuser.R
-import com.tech.mymedicalshopuser.state.MedicalResponseState
 import com.tech.mymedicalshopuser.ui.theme.GreenColor
 import com.tech.mymedicalshopuser.ui_layer.component.ButtonComponent
 import com.tech.mymedicalshopuser.ui_layer.navigation.HomeScreenRoute
@@ -47,7 +45,7 @@ import com.tech.mymedicalshopuser.viewmodel.MainViewmodel
 fun VerificationPendingScreen(
     navController: NavHostController,
     userId: String,
-    mainViewmodel: MainViewmodel = hiltViewModel()
+    mainViewmodel: MainViewmodel
 ) {
 
     mainViewmodel.getSpecificUser(userId)
@@ -57,42 +55,39 @@ fun VerificationPendingScreen(
     }
 
 
-    when (getSpecificUser) {
-        is MedicalResponseState.Loading -> {
+    when {
+        getSpecificUser.isLoading -> {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 Text(text = "Loading...")
             }
         }
 
-        is MedicalResponseState.Success -> {
-            val user = (getSpecificUser as MedicalResponseState.Success).data
-            val isVerifiedAccount = user.body()?.get(0)?.isApproved!!
-            LaunchedEffect(Unit) {
-                if(user.body()!!.isNotEmpty()) {
-                    isApproved = isVerifiedAccount
+        getSpecificUser.data != null -> {
+            Log.d("@@verify", "VerificationPendingScreen: ${getSpecificUser.data}")
+            val isVerifiedAccount = getSpecificUser.data!![0].isApproved
+            LaunchedEffect(isVerifiedAccount) {
+                isApproved = isVerifiedAccount
 
-                    if(isVerifiedAccount == 1){
-                        mainViewmodel.preferenceManager.setApprovedStatus(isVerifiedAccount)
-                    }else{
-                        mainViewmodel.preferenceManager.setApprovedStatus(isVerifiedAccount)
-                    }
+                mainViewmodel.preferenceManager.setApprovedStatus(isVerifiedAccount)
 
-                }
             }
-            Log.d("@isApproved", "Verification Screen: ${user.body()?.get(0)?.isApproved}")
+            Log.d("@isApproved", "Verification Screen: ${getSpecificUser.data!![0].isApproved}")
         }
 
-        is MedicalResponseState.Error -> {
-            val response = (getSpecificUser as MedicalResponseState.Error).message
+        getSpecificUser.error != null -> {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text(text = response)
+                Text(text = getSpecificUser.error!!)
             }
         }
     }
 
     val preloaderLottieComposition = rememberLottieComposition(
         spec = LottieCompositionSpec.RawRes(
-            R.raw.pending_lottie
+            if (isApproved == 0)
+                R.raw.pending_lottie
+            else
+                R.raw.verified_lottie
+
         )
     )
 

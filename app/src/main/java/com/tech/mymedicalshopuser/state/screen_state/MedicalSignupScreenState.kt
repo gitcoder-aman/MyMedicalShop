@@ -1,4 +1,4 @@
-package com.tech.mymedicalshopuser.state
+package com.tech.mymedicalshopuser.state.screen_state
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf

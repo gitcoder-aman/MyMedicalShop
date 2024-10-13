@@ -31,7 +31,6 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 
 import androidx.navigation.NavHostController
 import com.tech.mymedicalshopuser.R
@@ -40,10 +39,9 @@ import com.tech.mymedicalshopuser.ui.theme.GreenColor
 import com.tech.mymedicalshopuser.ui_layer.common.MulticolorText
 import com.tech.mymedicalshopuser.ui_layer.component.ButtonComponent
 import com.tech.mymedicalshopuser.ui_layer.component.TextFieldComponent
-import com.tech.mymedicalshopuser.ui_layer.navigation.HomeScreenRoute
 import com.tech.mymedicalshopuser.ui_layer.navigation.SignUpRoute
 import com.tech.mymedicalshopuser.ui_layer.navigation.VerificationScreenRoute
-import com.tech.mymedicalshopuser.viewmodel.MainViewmodel
+import com.tech.mymedicalshopuser.utils.ISOK
 import com.tech.mymedicalshopuser.viewmodel.MedicalAuthViewmodel
 
 @Composable
@@ -55,41 +53,41 @@ fun SignInScreen(
     val loginResponseState by medicalAuthViewmodel.loginResponseState.collectAsState()
     val loginScreenState by medicalAuthViewmodel.loginScreenStateData.collectAsState()
 
-    when (loginResponseState) {
-        is MedicalResponseState.Loading -> {
+    when {
+        loginResponseState.isLoading -> {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 Text(text = "Loading...")
             }
         }
 
-        is MedicalResponseState.Success -> {
-            val response = (loginResponseState as MedicalResponseState.Success).data
+        loginResponseState.data != null -> {
             LaunchedEffect(Unit) {
-                if (response.body()?.message != null) {
-                    medicalAuthViewmodel.resetLoginStateData()
-                    medicalAuthViewmodel.preferenceManager.setLoginUserId(response.body()!!.message)
+                if(loginResponseState.data!!.status == ISOK) {
+                    val userId = loginResponseState.data!!.message
+                    medicalAuthViewmodel.resetLoginScreenStateData()
+                    medicalAuthViewmodel.preferenceManager.setLoginUserId(userId)
 
                     navController.navigate(
-                        VerificationScreenRoute(response.body()?.message!!)
+                        VerificationScreenRoute(userId)
                     ) {
                         navController.popBackStack()
                     }
                     Toast.makeText(
                         context,
-                        "Login Successfully ${response.body()?.message}",
+                        "Login Successfully $userId",
                         Toast.LENGTH_SHORT
                     ).show()
-                } else {
-                    medicalAuthViewmodel.preferenceManager.setLoginUserId(response.body()!!.message)
+                }
+                else {
                     Toast.makeText(context, "Login Failed", Toast.LENGTH_SHORT).show()
                 }
             }
 
-            Log.d("@@login", "SignInScreen: ${response.body()?.message}")
-            Log.d("@@login", "SignInScreen: ${response.body()?.status}")
+            Log.d("@@login", "SignInScreen: ${loginResponseState.data!!.message}")
+            Log.d("@@login", "SignInScreen: ${loginResponseState.data!!.status}")
         }
 
-        is MedicalResponseState.Error -> {
+        loginResponseState.error != null -> {
             val response = (loginResponseState as MedicalResponseState.Error).message
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 Text(text = response)

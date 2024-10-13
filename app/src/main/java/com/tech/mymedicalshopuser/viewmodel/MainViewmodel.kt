@@ -1,20 +1,18 @@
 package com.tech.mymedicalshopuser.viewmodel
 
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.tech.mymedicalshopuser.data.response.user.GetAllUsersResponseItem
 import com.tech.mymedicalshopuser.domain.repository.MedicalRepository
+import com.tech.mymedicalshopuser.state.MedicalGetAllUserResponseState
+import com.tech.mymedicalshopuser.state.MedicalProductResponseState
 import com.tech.mymedicalshopuser.state.MedicalResponseState
-import com.tech.mymedicalshopuser.state.MedicalSignInScreenState
 import com.tech.mymedicalshopuser.utils.PreferenceManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import retrofit2.Response
 import javax.inject.Inject
 
 @HiltViewModel
@@ -26,26 +24,48 @@ class MainViewmodel @Inject constructor(
     val preferenceManager = PreferenceManager(context)
 
     private val _getSpecificUser =
-        MutableStateFlow<MedicalResponseState<Response<ArrayList<GetAllUsersResponseItem>>>>(
-            MedicalResponseState.Loading
-        )
+        MutableStateFlow(MedicalGetAllUserResponseState())
     val getSpecificUser = _getSpecificUser.asStateFlow()
 
+    private val _getAllProducts = MutableStateFlow(MedicalProductResponseState())
+    val getAllProducts = _getAllProducts.asStateFlow()
+
+    init {
+        getAllProducts()
+    }
     fun getSpecificUser(userId: String) {
         viewModelScope.launch {
-            try {
-                _getSpecificUser.value = MedicalResponseState.Loading
-                val getSpecificUser = medicalRepository.getSpecificUser(userId)
-                Log.d("@@viewmodel", "getSpecificUser: $getSpecificUser")
-                _getSpecificUser.value = MedicalResponseState.Success(getSpecificUser)
+          medicalRepository.getSpecificUser(userId).collect{
+              when(it){
+                  is MedicalResponseState.Loading->{
+                      _getSpecificUser.value = MedicalGetAllUserResponseState(isLoading = true)
+                  }
+                  is MedicalResponseState.Success->{
+                      _getSpecificUser.value = MedicalGetAllUserResponseState(data = it.data.body())
+                  }
+                  is MedicalResponseState.Error->{
+                      _getSpecificUser.value = MedicalGetAllUserResponseState(error = it.message)
+                  }
+              }
+          }
 
-            } catch (e: Exception) {
-                _getSpecificUser.value =
-                    MedicalResponseState.Error(e.message ?: "An error occurred")
-                Log.d("@@viewmodel", "error: ${e.message}")
-
+        }
+    }
+    private fun getAllProducts(){
+        viewModelScope.launch {
+            medicalRepository.getAllProducts().collect{
+                when(it){
+                    is MedicalResponseState.Loading->{
+                        _getAllProducts.value = MedicalProductResponseState(isLoading = true)
+                    }
+                    is MedicalResponseState.Success->{
+                        _getAllProducts.value = MedicalProductResponseState(data = it.data.body())
+                    }
+                    is MedicalResponseState.Error->{
+                        _getAllProducts.value = MedicalProductResponseState(error = it.message)
+                    }
+                }
             }
-
         }
     }
 }

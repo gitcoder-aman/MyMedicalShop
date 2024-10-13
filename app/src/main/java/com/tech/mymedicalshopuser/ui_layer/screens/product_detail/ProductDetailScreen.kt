@@ -1,5 +1,6 @@
 package com.tech.mymedicalshopuser.ui_layer.screens.product_detail
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -39,18 +40,26 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.tech.mymedicalshopuser.R
+import com.tech.mymedicalshopuser.domain.model.ClientChoiceModel
 import com.tech.mymedicalshopuser.ui.theme.GreenColor
 import com.tech.mymedicalshopuser.ui_layer.navigation.CartScreenRoute
+import com.tech.mymedicalshopuser.viewmodel.CartViewmodel
+import com.tech.mymedicalshopuser.viewmodel.MainViewmodel
 
 @Composable
-fun ProductDetailScreen(navController: NavHostController) {
+fun ProductDetailScreen(
+    navController: NavHostController,
+    cartViewmodel: CartViewmodel,
+    productItem: ClientChoiceModel,
+) {
 
-    var addToCart by remember {
+    val addToCart by remember {
         mutableStateOf(false)
     }
+    Log.d("@@id", "ProductDetailScreen: ${productItem.product_id}")
     Box(
         modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.TopCenter
+        contentAlignment = Alignment.BottomCenter
     ) {
         LazyColumn(
             modifier = Modifier
@@ -79,7 +88,7 @@ fun ProductDetailScreen(navController: NavHostController) {
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text(
-                            text = "Paracetamol", style = TextStyle(
+                            text = productItem.product_name, style = TextStyle(
                                 color = Color.Black,
                                 fontSize = 24.sp,
                                 fontWeight = FontWeight.Medium,
@@ -87,7 +96,7 @@ fun ProductDetailScreen(navController: NavHostController) {
                             )
                         )
                         Text(
-                            text = "$25.0", style = TextStyle(
+                            text = productItem.product_price.toString(), style = TextStyle(
                                 color = Color.Black,
                                 fontSize = 24.sp,
                                 fontWeight = FontWeight.Medium,
@@ -102,19 +111,19 @@ fun ProductDetailScreen(navController: NavHostController) {
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text(
-                            text = "Category Name", style = TextStyle(
+                            text = productItem.product_category, style = TextStyle(
                                 color = Color.Black,
-                                fontSize = 24.sp,
-                                fontWeight = FontWeight.Medium,
-                                fontFamily = FontFamily(Font(R.font.roboto_medium))
+                                fontSize = 22.sp,
+                                fontWeight = FontWeight.Normal,
+                                fontFamily = FontFamily(Font(R.font.roboto_regular))
                             )
                         )
                         Text(
-                            text = "500mg", style = TextStyle(
+                            text = productItem.product_power, style = TextStyle(
                                 color = Color.Black,
-                                fontSize = 24.sp,
-                                fontWeight = FontWeight.Medium,
-                                fontFamily = FontFamily(Font(R.font.roboto_medium))
+                                fontSize = 22.sp,
+                                fontWeight = FontWeight.Normal,
+                                fontFamily = FontFamily(Font(R.font.roboto_regular))
                             )
                         )
                     }
@@ -144,7 +153,7 @@ fun ProductDetailScreen(navController: NavHostController) {
                             )
                             Spacer(modifier = Modifier.width(8.dp)) // Space between image and text
                             Text(
-                                text = "4.6", style = TextStyle(
+                                text = productItem.product_rating.toString(), style = TextStyle(
                                     color = Color.Black,
                                     fontSize = 16.sp,
                                     fontWeight = FontWeight.Medium,
@@ -170,7 +179,7 @@ fun ProductDetailScreen(navController: NavHostController) {
                     Spacer(Modifier.height(8.dp))
 
                     Text(
-                        text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum .\n",
+                        text = productItem.product_description,
                         style = TextStyle(
                             color = Color.Black,
                             fontSize = 16.sp,
@@ -179,19 +188,21 @@ fun ProductDetailScreen(navController: NavHostController) {
                         )
                     )
                 }
-                AddToCartButton(
-                    modifier = Modifier
-                        .padding(start = 16.dp, end = 16.dp, bottom = 32.dp)
-                        .align(Alignment.BottomCenter),
-                    addToCart = addToCart
-                ) {
-                    if (it) {
-                        addToCart = !addToCart
-                    } else {
-                        navController.navigate(CartScreenRoute)
-                    }
+            }
+        }
+        AddToCartButton(
+            modifier = Modifier
+                .padding(start = 16.dp, end = 16.dp, bottom = 32.dp)
+                .align(Alignment.BottomCenter),
+            addToCart = if (cartViewmodel.findProductById(productItem.product_id) != null) !addToCart else addToCart
+        ) {
 
-                }
+            if (cartViewmodel.findProductById(productItem.product_id) != null) {
+                navController.navigate(CartScreenRoute)
+            } else {
+                cartViewmodel.addItem(
+                    productItem
+                )
             }
         }
     }
@@ -201,7 +212,7 @@ fun ProductDetailScreen(navController: NavHostController) {
 fun AddToCartButton(
     modifier: Modifier = Modifier,
     addToCart: Boolean,
-    onClick: (Boolean) -> Unit
+    onClick: () -> Unit
 ) {
 
     Row(
@@ -211,10 +222,7 @@ fun AddToCartButton(
     ) {
         Button(
             onClick = {
-                if (!addToCart)
-                    onClick(true)
-                else
-                    onClick(false)
+                onClick()
             },
             colors = ButtonDefaults.buttonColors(
                 containerColor = GreenColor,

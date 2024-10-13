@@ -20,7 +20,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.tech.mymedicalshopuser.R
 import com.tech.mymedicalshopuser.ui.theme.GreenColor
-import com.tech.mymedicalshopuser.ui.theme.LightGreenColor
 import com.tech.mymedicalshopuser.ui.theme.WhiteGreyColor
 
 @Composable

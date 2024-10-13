@@ -25,7 +25,19 @@ object OrderScreenRoute
 object ProfileScreenRoute
 
 @Serializable
-object ProductDetailScreenRoute
+data class ProductDetailScreenRoute(
+    val productName: String,
+    val productId: String,
+    val productImage: String,
+    val productPrice: Int,
+    val productRating: Float,
+    val productStock: Int,
+    val productDescription: String,
+    val productPower: String,
+    val productCategory: String,
+    val productExpiryDate: String,
+
+    )
 
 @Serializable
 data class VerificationScreenRoute(

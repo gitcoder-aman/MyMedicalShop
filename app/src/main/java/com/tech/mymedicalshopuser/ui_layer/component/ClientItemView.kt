@@ -1,7 +1,6 @@
 package com.tech.mymedicalshopuser.ui_layer.component
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,30 +17,34 @@ import androidx.compose.material.Card
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.net.toUri
+import coil.compose.AsyncImage
+import coil.compose.rememberAsyncImagePainter
+import coil.request.ImageRequest
+import coil.size.Scale
 import com.tech.mymedicalshopuser.R
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ClientItemView(
-    itemImage: Int,
-    price: String,
-    rating: String,
+    itemImage: String,
+    price: Int,
+    rating: Float,
     itemName: String,
     onClick:()->Unit
 ) {
@@ -66,14 +69,28 @@ fun ClientItemView(
                     .height(150.dp),
                 contentAlignment = Alignment.TopStart
             ) {
+//                val painter = rememberAsyncImagePainter(
+//                    model = ImageRequest.Builder(LocalContext.current)
+//                        .data(itemImage.toUri())
+//                        .scale(Scale.FILL) // Adjust the scale if necessary
+//                        .build()
+//                )
                 Image(
-                    painter = painterResource(itemImage),
+                    painter = painterResource(R.drawable.med_1),
                     contentDescription = null,
                     modifier = Modifier
                         .fillMaxSize()
                         .clip(RoundedCornerShape(8.dp)),
                     contentScale = ContentScale.Crop
                 )
+//                AsyncImage(
+//                    model = itemImage.toUri(),
+//                    contentDescription = null,
+//                    modifier = Modifier
+//                        .fillMaxSize()
+//                        .clip(RoundedCornerShape(8.dp)),
+//                    contentScale = ContentScale.Crop
+//                )
                 Icon(
                     painter = painterResource(R.drawable.heart),
                     contentDescription = null,
@@ -91,7 +108,7 @@ fun ClientItemView(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = price, style = TextStyle(
+                    text = "₹ $price", style = TextStyle(
                         color = Color.Black,
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Medium,
@@ -111,7 +128,7 @@ fun ClientItemView(
                     )
                     Spacer(Modifier.width(4.dp))
                     Text(
-                        text = rating, style = TextStyle(
+                        text = rating.toString(), style = TextStyle(
                             color = Color.Black,
                             fontSize = 12.sp,
                             fontWeight = FontWeight.Normal,
