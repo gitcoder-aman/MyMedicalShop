@@ -40,7 +40,9 @@ import com.tech.mymedicalshopuser.ui_layer.common.MulticolorText
 import com.tech.mymedicalshopuser.ui_layer.component.ButtonComponent
 import com.tech.mymedicalshopuser.ui_layer.component.TextFieldComponent
 import com.tech.mymedicalshopuser.ui_layer.navigation.SignInRoute
+import com.tech.mymedicalshopuser.ui_layer.navigation.VerificationScreenRoute
 import com.tech.mymedicalshopuser.utils.ISOK
+import com.tech.mymedicalshopuser.utils.PreferenceManager
 import com.tech.mymedicalshopuser.viewmodel.MedicalAuthViewmodel
 
 @Composable
@@ -48,7 +50,9 @@ fun SignupScreen(
     navController: NavHostController,
     medicalAuthViewmodel: MedicalAuthViewmodel = hiltViewModel()
 ) {
+
     val context = LocalContext.current
+    val preferenceManager = PreferenceManager(context)
     val signupResponseState by medicalAuthViewmodel.signupResponseState.collectAsState()
     val signupScreenState by medicalAuthViewmodel.signupScreenStateData.collectAsState()
 
@@ -63,14 +67,15 @@ fun SignupScreen(
             LaunchedEffect(Unit) {
                 if (signupResponseState.data!!.status == ISOK) {
                 val userId = signupResponseState.data!!.message
-                    navController.navigate(SignInRoute)
+//                    navController.navigate(SignInRoute)
 
-                    medicalAuthViewmodel.preferenceManager.setLoginUserName(signupScreenState.userName.value)
-                    medicalAuthViewmodel.preferenceManager.setLoginAddress(signupScreenState.address.value)
-                    medicalAuthViewmodel.preferenceManager.setLoginPinCode(signupScreenState.pinCode.value)
-                    medicalAuthViewmodel.preferenceManager.setLoginEmailId(signupScreenState.email.value)
-                    medicalAuthViewmodel.preferenceManager.setLoginMobileNo(signupScreenState.mobileNo.value)
+                    preferenceManager.setLoginUserId(userId)
 
+                    navController.navigate(
+                        VerificationScreenRoute(userId)
+                    ) {
+                        navController.popBackStack()
+                    }
                     medicalAuthViewmodel.resetSignupScreenStateData()
 
                     Toast.makeText(

@@ -21,6 +21,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -38,6 +39,7 @@ import com.tech.mymedicalshopuser.R
 import com.tech.mymedicalshopuser.ui.theme.GreenColor
 import com.tech.mymedicalshopuser.ui_layer.component.ButtonComponent
 import com.tech.mymedicalshopuser.ui_layer.navigation.HomeScreenRoute
+import com.tech.mymedicalshopuser.utils.PreferenceManager
 import com.tech.mymedicalshopuser.viewmodel.MainViewmodel
 
 
@@ -47,6 +49,10 @@ fun VerificationPendingScreen(
     userId: String,
     mainViewmodel: MainViewmodel
 ) {
+
+
+    val context = LocalContext.current
+    val preferenceManager = PreferenceManager(context)
 
     mainViewmodel.getSpecificUser(userId)
     val getSpecificUser by mainViewmodel.getSpecificUser.collectAsState()
@@ -68,7 +74,7 @@ fun VerificationPendingScreen(
             LaunchedEffect(isVerifiedAccount) {
                 isApproved = isVerifiedAccount
 
-                mainViewmodel.preferenceManager.setApprovedStatus(isVerifiedAccount)
+                preferenceManager.setApprovedStatus(isVerifiedAccount)
 
             }
             Log.d("@isApproved", "Verification Screen: ${getSpecificUser.data!![0].isApproved}")

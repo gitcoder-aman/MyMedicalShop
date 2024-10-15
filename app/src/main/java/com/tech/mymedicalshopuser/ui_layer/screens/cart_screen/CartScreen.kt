@@ -58,19 +58,20 @@ import com.tech.mymedicalshopuser.ui_layer.navigation.CartScreenRoute
 import com.tech.mymedicalshopuser.ui_layer.navigation.HomeScreenRoute
 import com.tech.mymedicalshopuser.ui_layer.navigation.OrderScreenRoute
 import com.tech.mymedicalshopuser.ui_layer.navigation.ProductDetailScreenRoute
+import com.tech.mymedicalshopuser.utils.PreferenceManager
 import com.tech.mymedicalshopuser.viewmodel.CartViewmodel
-import com.tech.mymedicalshopuser.viewmodel.MedicalAuthViewmodel
 import com.tech.mymedicalshopuser.viewmodel.OrderViewmodel
 import kotlin.math.roundToInt
 
 @Composable
-fun CartScreen(navController: NavHostController, cartViewmodel: CartViewmodel,medicalAuthViewmodel: MedicalAuthViewmodel,orderViewmodel: OrderViewmodel) {
+fun CartScreen(navController: NavHostController, cartViewmodel: CartViewmodel,orderViewmodel: OrderViewmodel) {
     var selectedItem by remember {
         mutableIntStateOf(1)
     }
     val context = LocalContext.current
     val cartList = cartViewmodel.cartItemsList
     val subTotalPrice by cartViewmodel.subTotalPrice.collectAsState()
+    val preferenceManager = PreferenceManager(context)
 
     BackHandler {
         navController.navigate(HomeScreenRoute) {
@@ -212,18 +213,18 @@ fun CartScreen(navController: NavHostController, cartViewmodel: CartViewmodel,me
                         product_price = productItem.product_price,
                         product_id = productItem.product_id,
                         product_quantity = productItem.product_count,
-                        user_id = medicalAuthViewmodel.preferenceManager.getLoginUserId()!!,
-                        user_name = medicalAuthViewmodel.preferenceManager.getLoginUserName()!!,
+                        user_id = preferenceManager.getLoginUserId()!!,
+                        user_name = preferenceManager.getLoginUserName()!!,
                         order_date = java.util.Date().toString(),
                         totalPrice = (productItem.product_count * productItem.product_price) + 10 + (subTotalPrice * 18 / 100).toInt(),
                         delivery_charge = 10,
                         tax_charge = (subTotalPrice * 18 / 100).toInt(),//according to gst 18%
                         subtotal_price = productItem.product_count * productItem.product_price,
                         isApproved = 0,
-                        user_address = medicalAuthViewmodel.preferenceManager.getLoginAddress()!!,
-                        user_email = medicalAuthViewmodel.preferenceManager.getLoginEmailId()!!,
-                        user_mobile = medicalAuthViewmodel.preferenceManager.getLoginMobileNo()!!,
-                        user_pinCode = medicalAuthViewmodel.preferenceManager.getLoginPinCode()!!,
+                        user_address = preferenceManager.getLoginAddress()!!,
+                        user_email = preferenceManager.getLoginEmailId()!!,
+                        user_mobile = preferenceManager.getLoginMobileNo()!!,
+                        user_pinCode = preferenceManager.getLoginPinCode()!!,
                     )
 
                     orderList.add(orderItem)
@@ -248,7 +249,7 @@ fun CartScreen(navController: NavHostController, cartViewmodel: CartViewmodel,me
                     )
                 }
                 orderViewmodel.createOrder(orderList)
-//                cartViewmodel.clearCart()
+                cartViewmodel.clearCart()
                 navController.navigate(OrderScreenRoute)
 
             }

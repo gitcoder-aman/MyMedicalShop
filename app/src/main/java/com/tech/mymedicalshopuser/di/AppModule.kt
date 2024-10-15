@@ -1,5 +1,7 @@
 package com.tech.mymedicalshopuser.di
 
+import android.content.Context
+import android.content.SharedPreferences
 import com.tech.mymedicalshopuser.data.services.ApiServices
 import com.tech.mymedicalshopuser.domain.repository.MedicalRepository
 import com.tech.mymedicalshopuser.data.repository.MedicalRepositoryImpl
@@ -31,6 +33,12 @@ class AppModule {
     @Singleton
     fun provideMedicalRepository(apiServices: ApiServices) : MedicalRepository{
         return MedicalRepositoryImpl(apiServices)
+    }
+
+    @Provides
+    @Singleton
+    fun provideSharedPreferences(context : Context): SharedPreferences {
+        return context.getSharedPreferences("my_medical_pref", Context.MODE_PRIVATE)
     }
 
 }

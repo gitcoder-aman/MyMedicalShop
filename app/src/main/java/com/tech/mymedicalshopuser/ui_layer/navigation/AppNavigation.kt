@@ -2,6 +2,7 @@ package com.tech.mymedicalshopuser.ui_layer.navigation
 
 import android.util.Log
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -16,6 +17,7 @@ import com.tech.mymedicalshopuser.ui_layer.screens.SignInScreen
 import com.tech.mymedicalshopuser.ui_layer.screens.SignupScreen
 import com.tech.mymedicalshopuser.ui_layer.screens.VerificationPendingScreen
 import com.tech.mymedicalshopuser.ui_layer.screens.product_detail.ProductDetailScreen
+import com.tech.mymedicalshopuser.utils.PreferenceManager
 import com.tech.mymedicalshopuser.viewmodel.CartViewmodel
 import com.tech.mymedicalshopuser.viewmodel.MainViewmodel
 import com.tech.mymedicalshopuser.viewmodel.MedicalAuthViewmodel
@@ -28,16 +30,19 @@ fun AppNavigation(navController: NavHostController) {
     val cartViewmodel : CartViewmodel = hiltViewModel()
     val orderViewmodel : OrderViewmodel = hiltViewModel()
 
-    Log.d("@@Nav", "AppNavigation: ${medicalAuthViewmodel.preferenceManager.getLoginUserId()}")
-    Log.d("@@Nav", "AppNavigation: ${medicalAuthViewmodel.preferenceManager.getApprovedStatus()}")
+    val context = LocalContext.current
+    val preferenceManager = PreferenceManager(context)
+
+    Log.d("@@Nav", "AppNavigation: ${preferenceManager.getLoginUserId()}")
+    Log.d("@@Nav", "AppNavigation: ${preferenceManager.getApprovedStatus()}")
     NavHost(
         navController = navController,
-        startDestination = if (medicalAuthViewmodel.preferenceManager.getLoginUserId() != "" &&
-            medicalAuthViewmodel.preferenceManager.getApprovedStatus() == 1
+        startDestination = if (preferenceManager.getLoginUserId() != "" &&
+            preferenceManager.getApprovedStatus() == 1
         )
             HomeScreenRoute
-        else if (medicalAuthViewmodel.preferenceManager.getLoginUserId() != "")
-            VerificationScreenRoute(medicalAuthViewmodel.preferenceManager.getLoginUserId()!!)
+        else if (preferenceManager.getLoginUserId() != "")
+            VerificationScreenRoute(preferenceManager.getLoginUserId()!!)
         else SignInRoute
     ) {
 
@@ -48,13 +53,13 @@ fun AppNavigation(navController: NavHostController) {
             SignupScreen(navController)
         }
         composable<HomeScreenRoute> {
-            HomeScreen(navController,mainViewmodel,medicalAuthViewmodel)
+            HomeScreen(navController,mainViewmodel)
         }
         composable<CartScreenRoute> {
-            CartScreen(navController, cartViewmodel,medicalAuthViewmodel,orderViewmodel)
+            CartScreen(navController, cartViewmodel,orderViewmodel)
         }
         composable<OrderScreenRoute> {
-            OrderScreen(navController,orderViewmodel,medicalAuthViewmodel)
+            OrderScreen(navController,orderViewmodel,)
         }
         composable<ProfileScreenRoute> {
             ProfileScreen(navController)

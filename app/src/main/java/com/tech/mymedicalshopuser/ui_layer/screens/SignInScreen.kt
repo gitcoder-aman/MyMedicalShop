@@ -65,13 +65,7 @@ fun SignInScreen(
                 if(loginResponseState.data!!.status == ISOK) {
                     val userId = loginResponseState.data!!.message
                     medicalAuthViewmodel.resetLoginScreenStateData()
-                    medicalAuthViewmodel.preferenceManager.setLoginUserId(userId)
 
-                    navController.navigate(
-                        VerificationScreenRoute(userId)
-                    ) {
-                        navController.popBackStack()
-                    }
                     Toast.makeText(
                         context,
                         "Login Successfully $userId",

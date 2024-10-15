@@ -52,14 +52,13 @@ import com.tech.mymedicalshopuser.ui_layer.component.ClientItemView
 import com.tech.mymedicalshopuser.ui_layer.component.PagerSlider
 import com.tech.mymedicalshopuser.ui_layer.component.TextFieldComponent
 import com.tech.mymedicalshopuser.ui_layer.navigation.ProductDetailScreenRoute
+import com.tech.mymedicalshopuser.utils.PreferenceManager
 import com.tech.mymedicalshopuser.viewmodel.MainViewmodel
-import com.tech.mymedicalshopuser.viewmodel.MedicalAuthViewmodel
 
 @Composable
 fun HomeScreen(
     navController: NavHostController,
     mainViewmodel: MainViewmodel,
-    medicalAuthViewmodel: MedicalAuthViewmodel
 ) {
 
     var selectedItem by remember {
@@ -67,7 +66,9 @@ fun HomeScreen(
     }
     val context = LocalContext.current
 
-    mainViewmodel.getSpecificUser(medicalAuthViewmodel.preferenceManager.getLoginUserId().toString())
+    val preferenceManager = PreferenceManager(context)
+
+    mainViewmodel.getSpecificUser(preferenceManager.getLoginUserId().toString())
     val getSpecificUser by mainViewmodel.getSpecificUser.collectAsState()
 
     var isApproved by remember {
@@ -88,11 +89,11 @@ fun HomeScreen(
             LaunchedEffect(isVerifiedAccount) {
                 isApproved = isVerifiedAccount
 
-                mainViewmodel.preferenceManager.setApprovedStatus(isVerifiedAccount)
+                preferenceManager.setApprovedStatus(isVerifiedAccount)
 
             }
             Log.d("@isApproved", "Home Screen: ${getSpecificUser.data!![0].isApproved}")
-            Log.d("@isApproved", "Home Screen gerRef: ${mainViewmodel.preferenceManager.getApprovedStatus()}")
+            Log.d("@isApproved", "Home Screen gerRef: ${preferenceManager.getApprovedStatus()}")
         }
 
         getSpecificUser.error != null -> {

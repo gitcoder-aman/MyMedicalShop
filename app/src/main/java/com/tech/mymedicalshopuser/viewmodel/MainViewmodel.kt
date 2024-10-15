@@ -1,15 +1,12 @@
 package com.tech.mymedicalshopuser.viewmodel
 
-import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tech.mymedicalshopuser.domain.repository.MedicalRepository
 import com.tech.mymedicalshopuser.state.MedicalGetAllUserResponseState
 import com.tech.mymedicalshopuser.state.MedicalProductResponseState
 import com.tech.mymedicalshopuser.state.MedicalResponseState
-import com.tech.mymedicalshopuser.utils.PreferenceManager
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -17,11 +14,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewmodel @Inject constructor(
-    @ApplicationContext context: Context,
     private val medicalRepository: MedicalRepository
 ) : ViewModel() {
-
-    val preferenceManager = PreferenceManager(context)
 
     private val _getSpecificUser =
         MutableStateFlow(MedicalGetAllUserResponseState())

@@ -21,11 +21,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MedicalAuthViewmodel @Inject constructor(
-    @ApplicationContext context: Context,
-    private val medicalRepository: MedicalRepository
+    private val medicalRepository: MedicalRepository,
 ) : ViewModel() {
 
-    val preferenceManager = PreferenceManager(context)
     private val _signupResponseState = MutableStateFlow(MedicalAuthResponseSate())
     val signupResponseState = _signupResponseState.asStateFlow()
 

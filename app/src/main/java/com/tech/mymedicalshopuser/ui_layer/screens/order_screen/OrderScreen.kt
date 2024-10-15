@@ -38,6 +38,7 @@ import com.tech.mymedicalshopuser.data.response.product.ProductModelItem
 import com.tech.mymedicalshopuser.ui_layer.bottomNavigation.NavigationView
 import com.tech.mymedicalshopuser.ui_layer.navigation.HomeScreenRoute
 import com.tech.mymedicalshopuser.ui_layer.navigation.OrderScreenRoute
+import com.tech.mymedicalshopuser.utils.PreferenceManager
 import com.tech.mymedicalshopuser.viewmodel.MedicalAuthViewmodel
 import com.tech.mymedicalshopuser.viewmodel.OrderViewmodel
 
@@ -45,7 +46,6 @@ import com.tech.mymedicalshopuser.viewmodel.OrderViewmodel
 fun OrderScreen(
     navController: NavHostController,
     orderViewmodel: OrderViewmodel,
-    medicalAuthViewmodel: MedicalAuthViewmodel
 ) {
     var selectedItem by remember {
         mutableIntStateOf(2)
@@ -53,13 +53,15 @@ fun OrderScreen(
     val context = LocalContext.current
     val getAllUserResponseState = orderViewmodel.getAllUserOrders.collectAsState()
     val createOrderResponse = orderViewmodel.createOrder.collectAsState()
+    val preferenceManager = PreferenceManager(context)
+
 
     // Use a state variable to store the order list
     val getAllUserOrderList = remember { mutableStateListOf<MedicalOrderResponseItem>() }
 
     // Fetch all user orders when the composable is first composed
     LaunchedEffect(getAllUserResponseState.value) {
-        orderViewmodel.getAllUserOrders(medicalAuthViewmodel.preferenceManager.getLoginUserId()!!)
+        orderViewmodel.getAllUserOrders(preferenceManager.getLoginUserId()!!)
     }
 
     // Update the order list when data changes
