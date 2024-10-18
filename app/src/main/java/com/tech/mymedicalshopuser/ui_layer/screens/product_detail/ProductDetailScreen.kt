@@ -40,17 +40,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.tech.mymedicalshopuser.R
-import com.tech.mymedicalshopuser.domain.model.ClientChoiceModel
+import com.tech.mymedicalshopuser.domain.model.ClientChoiceModelEntity
+import com.tech.mymedicalshopuser.local.viewmodel.RoomCartViewModel
 import com.tech.mymedicalshopuser.ui.theme.GreenColor
 import com.tech.mymedicalshopuser.ui_layer.navigation.CartScreenRoute
-import com.tech.mymedicalshopuser.viewmodel.CartViewmodel
-import com.tech.mymedicalshopuser.viewmodel.MainViewmodel
 
 @Composable
 fun ProductDetailScreen(
     navController: NavHostController,
-    cartViewmodel: CartViewmodel,
-    productItem: ClientChoiceModel,
+    productItem: ClientChoiceModelEntity,
+    roomCartViewmodel: RoomCartViewModel,
 ) {
 
     val addToCart by remember {
@@ -194,13 +193,13 @@ fun ProductDetailScreen(
             modifier = Modifier
                 .padding(start = 16.dp, end = 16.dp, bottom = 32.dp)
                 .align(Alignment.BottomCenter),
-            addToCart = if (cartViewmodel.findProductById(productItem.product_id) != null) !addToCart else addToCart
+            addToCart = if (roomCartViewmodel.findProductById(productItem.product_id) != null) !addToCart else addToCart
         ) {
 
-            if (cartViewmodel.findProductById(productItem.product_id) != null) {
+            if (roomCartViewmodel.findProductById(productItem.product_id) != null) {
                 navController.navigate(CartScreenRoute)
             } else {
-                cartViewmodel.addItem(
+                roomCartViewmodel.insertCartList(
                     productItem
                 )
             }

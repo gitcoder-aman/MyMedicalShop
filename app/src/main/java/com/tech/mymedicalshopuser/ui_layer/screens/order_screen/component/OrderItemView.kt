@@ -27,12 +27,12 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.tech.mymedicalshopuser.R
-import com.tech.mymedicalshopuser.domain.model.ClientChoiceModel
+import com.tech.mymedicalshopuser.domain.model.ClientChoiceModelEntity
 import com.tech.mymedicalshopuser.ui.theme.LightGreenColor
 
 @Composable
 fun OrderItemView(
-    cart: ClientChoiceModel,
+    cart: ClientChoiceModelEntity,
     onClick: () -> Unit
 ) {
 

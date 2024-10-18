@@ -30,7 +30,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -51,6 +50,7 @@ import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.tech.mymedicalshopuser.R
+import com.tech.mymedicalshopuser.local.viewmodel.RoomCartViewModel
 import com.tech.mymedicalshopuser.ui.theme.GreenColor
 import com.tech.mymedicalshopuser.ui.theme.WhiteGreyColor
 import com.tech.mymedicalshopuser.ui_layer.bottomNavigation.NavigationView
@@ -63,18 +63,21 @@ import com.tech.mymedicalshopuser.utils.calculateDeliveryCharge
 import com.tech.mymedicalshopuser.utils.calculateDiscount
 import com.tech.mymedicalshopuser.utils.calculateTaxCharge
 import com.tech.mymedicalshopuser.utils.totalPriceCalculate
-import com.tech.mymedicalshopuser.viewmodel.CartViewmodel
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
 @Composable
-fun CartScreen(navController: NavHostController, cartViewmodel: CartViewmodel) {
+fun CartScreen(
+    navController: NavHostController,
+    roomCartViewmodel: RoomCartViewModel
+) {
     var selectedItem by remember {
         mutableIntStateOf(2)
     }
     val context = LocalContext.current
-    val cartList by cartViewmodel.cartItemsList.collectAsState()
-    val subTotalPrice by cartViewmodel.subTotalPrice.collectAsState()
+//    val cartList by cartViewmodel.cartItemsList.collectAsState()
+    val cartList by roomCartViewmodel.cartList.collectAsState()
+    val subTotalPrice by roomCartViewmodel.subTotalPrice.collectAsState()
 
     BackHandler {
         navController.navigate(HomeScreenRoute) {
@@ -165,18 +168,12 @@ fun CartScreen(navController: NavHostController, cartViewmodel: CartViewmodel) {
                                     )
                                 )
                             }, onDelete = {
-                                cartViewmodel.removeItem(product)
+                                roomCartViewmodel.deleteCartById(product.product_id)
                             }, increaseItem = {
-                                cartViewmodel.updateItemCount(
-                                    product,
-                                    product.product_count + 1
-                                )
+                                roomCartViewmodel.updateCartList(product.product_id, product.product_count + 1)
                             }, decreaseItem = {
                                 if (product.product_count > 1)
-                                    cartViewmodel.updateItemCount(
-                                        product,
-                                        product.product_count - 1
-                                    )
+                                    roomCartViewmodel.updateCartList(product.product_id, product.product_count - 1)
                             }
                         )
                     }

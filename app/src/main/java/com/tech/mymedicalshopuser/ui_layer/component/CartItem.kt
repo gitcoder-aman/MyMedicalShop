@@ -32,7 +32,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.tech.mymedicalshopuser.R
-import com.tech.mymedicalshopuser.domain.model.ClientChoiceModel
+import com.tech.mymedicalshopuser.domain.model.ClientChoiceModelEntity
 import com.tech.mymedicalshopuser.ui.theme.GreenColor
 
 @Composable
@@ -42,7 +42,7 @@ fun CartItem(
     onDelete: () -> Unit,
     increaseItem: () -> Unit,
     decreaseItem: () -> Unit,
-    productItem: ClientChoiceModel
+    productItem: ClientChoiceModelEntity
 ) {
     Card(
         onClick = {

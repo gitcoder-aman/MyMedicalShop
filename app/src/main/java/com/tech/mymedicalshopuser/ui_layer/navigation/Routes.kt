@@ -1,8 +1,5 @@
 package com.tech.mymedicalshopuser.ui_layer.navigation
 
-import androidx.compose.runtime.snapshots.SnapshotStateList
-import androidx.core.content.res.ColorStateListInflaterCompat
-import com.tech.mymedicalshopuser.domain.model.ClientChoiceModel
 import kotlinx.serialization.Serializable
 
 @Serializable

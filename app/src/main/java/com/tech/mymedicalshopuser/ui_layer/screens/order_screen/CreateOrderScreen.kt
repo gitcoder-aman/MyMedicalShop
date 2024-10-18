@@ -48,7 +48,8 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.tech.mymedicalshopuser.R
 import com.tech.mymedicalshopuser.data.response.order.MedicalOrderResponseItem
-import com.tech.mymedicalshopuser.domain.model.ClientChoiceModel
+import com.tech.mymedicalshopuser.domain.model.ClientChoiceModelEntity
+import com.tech.mymedicalshopuser.local.viewmodel.RoomCartViewModel
 import com.tech.mymedicalshopuser.state.screen_state.AddAddressScreenState
 import com.tech.mymedicalshopuser.ui.theme.GreenColor
 import com.tech.mymedicalshopuser.ui.theme.LightGreenColor
@@ -62,16 +63,15 @@ import com.tech.mymedicalshopuser.utils.calculateDeliveryCharge
 import com.tech.mymedicalshopuser.utils.calculateTaxCharge
 import com.tech.mymedicalshopuser.utils.totalPriceCalculate
 import com.tech.mymedicalshopuser.viewmodel.AddressViewModel
-import com.tech.mymedicalshopuser.viewmodel.CartViewmodel
 import com.tech.mymedicalshopuser.viewmodel.OrderViewmodel
 
 @Composable
 fun CreateOrderScreen(
-    cartList: List<ClientChoiceModel>,
+    cartList: List<ClientChoiceModelEntity>,
     orderViewmodel: OrderViewmodel,
     addressViewModel: AddressViewModel,
     subTotalPrice: Float,
-    cartViewModel: CartViewmodel,
+    roomCartViewModel: RoomCartViewModel,
     navController: NavController
 ) {
 
@@ -230,7 +230,7 @@ fun CreateOrderScreen(
                             preferenceManager
                         )
                         orderViewmodel.createOrder(orderListReady)
-                        cartViewModel.clearCart()
+                        roomCartViewModel.deleteAllCartList()
                         navController.navigate(CompletedOrderScreenRoute)
                     } else {
                         Toast.makeText(context, "Please Select Address.", Toast.LENGTH_SHORT).show()
@@ -260,7 +260,7 @@ fun CreateOrderScreen(
 
 fun createOrderOneByOne(
     address: AddAddressScreenState,
-    cartList: List<ClientChoiceModel>,
+    cartList: List<ClientChoiceModelEntity>,
     preferenceManager: PreferenceManager
 ): MutableList<MedicalOrderResponseItem> {
     val orderList = mutableListOf<MedicalOrderResponseItem>()
