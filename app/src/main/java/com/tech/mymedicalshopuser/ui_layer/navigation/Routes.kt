@@ -1,16 +1,15 @@
 package com.tech.mymedicalshopuser.ui_layer.navigation
 
+import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.core.content.res.ColorStateListInflaterCompat
+import com.tech.mymedicalshopuser.domain.model.ClientChoiceModel
 import kotlinx.serialization.Serializable
 
 @Serializable
 object SignInRoute
 
-
 @Serializable
 object SignUpRoute
-
-@Serializable
-object StartScreenRoute
 
 @Serializable
 object HomeScreenRoute
@@ -19,10 +18,25 @@ object HomeScreenRoute
 object CartScreenRoute
 
 @Serializable
-object OrderScreenRoute
+object OrderTrackScreenRoute
 
 @Serializable
 object ProfileScreenRoute
+
+@Serializable
+object SearchScreenRoute
+
+@Serializable
+object AddressScreenRoute
+
+@Serializable
+object CompletedOrderScreenRoute
+
+@Serializable
+data class CreateOrderScreenRoute(
+    val cartList : String,
+    val subTotalPrice : Float
+)
 
 @Serializable
 data class ProductDetailScreenRoute(
@@ -41,5 +55,5 @@ data class ProductDetailScreenRoute(
 
 @Serializable
 data class VerificationScreenRoute(
-    val userId : String
+    val userId: String
 )

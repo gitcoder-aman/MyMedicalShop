@@ -1,7 +1,6 @@
 package com.tech.mymedicalshopuser.di
 
 import android.content.Context
-import android.content.SharedPreferences
 import com.tech.mymedicalshopuser.data.services.ApiServices
 import com.tech.mymedicalshopuser.domain.repository.MedicalRepository
 import com.tech.mymedicalshopuser.data.repository.MedicalRepositoryImpl
@@ -9,7 +8,9 @@ import com.tech.mymedicalshopuser.utils.BASE_URL
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import okhttp3.Cache
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -21,7 +22,7 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun provideMedicalApi() :ApiServices{
+    fun provideMedicalApi(context: Context) :ApiServices{
         return Retrofit.Builder()
             .baseUrl(BASE_URL)
             .client(OkHttpClient.Builder().build())
@@ -37,8 +38,8 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun provideSharedPreferences(context : Context): SharedPreferences {
-        return context.getSharedPreferences("my_medical_pref", Context.MODE_PRIVATE)
+    fun provideContext(@ApplicationContext context: Context): Context {
+        return context
     }
 
 }

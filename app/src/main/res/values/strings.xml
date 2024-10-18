@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">MyMedicalShopUser</string>
+    <string name="rs">%1$s ₹</string>
 </resources>

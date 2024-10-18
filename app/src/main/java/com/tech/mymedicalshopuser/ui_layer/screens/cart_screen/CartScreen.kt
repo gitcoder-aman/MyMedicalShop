@@ -30,12 +30,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -49,29 +51,30 @@ import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.tech.mymedicalshopuser.R
-import com.tech.mymedicalshopuser.data.response.order.MedicalOrderResponseItem
 import com.tech.mymedicalshopuser.ui.theme.GreenColor
 import com.tech.mymedicalshopuser.ui.theme.WhiteGreyColor
 import com.tech.mymedicalshopuser.ui_layer.bottomNavigation.NavigationView
 import com.tech.mymedicalshopuser.ui_layer.component.CartItem
 import com.tech.mymedicalshopuser.ui_layer.navigation.CartScreenRoute
+import com.tech.mymedicalshopuser.ui_layer.navigation.CreateOrderScreenRoute
 import com.tech.mymedicalshopuser.ui_layer.navigation.HomeScreenRoute
-import com.tech.mymedicalshopuser.ui_layer.navigation.OrderScreenRoute
 import com.tech.mymedicalshopuser.ui_layer.navigation.ProductDetailScreenRoute
-import com.tech.mymedicalshopuser.utils.PreferenceManager
+import com.tech.mymedicalshopuser.utils.calculateDeliveryCharge
+import com.tech.mymedicalshopuser.utils.calculateDiscount
+import com.tech.mymedicalshopuser.utils.calculateTaxCharge
+import com.tech.mymedicalshopuser.utils.totalPriceCalculate
 import com.tech.mymedicalshopuser.viewmodel.CartViewmodel
-import com.tech.mymedicalshopuser.viewmodel.OrderViewmodel
-import kotlin.math.roundToInt
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
 @Composable
-fun CartScreen(navController: NavHostController, cartViewmodel: CartViewmodel,orderViewmodel: OrderViewmodel) {
+fun CartScreen(navController: NavHostController, cartViewmodel: CartViewmodel) {
     var selectedItem by remember {
-        mutableIntStateOf(1)
+        mutableIntStateOf(2)
     }
     val context = LocalContext.current
-    val cartList = cartViewmodel.cartItemsList
+    val cartList by cartViewmodel.cartItemsList.collectAsState()
     val subTotalPrice by cartViewmodel.subTotalPrice.collectAsState()
-    val preferenceManager = PreferenceManager(context)
 
     BackHandler {
         navController.navigate(HomeScreenRoute) {
@@ -205,53 +208,13 @@ fun CartScreen(navController: NavHostController, cartViewmodel: CartViewmodel,or
             CartPriceCard(
                 subTotalPrice
             ) {
-                val orderList = mutableListOf<MedicalOrderResponseItem>()
-                for (productItem in cartList) {
-                    val orderItem = MedicalOrderResponseItem(
-                        product_category = productItem.product_category,
-                        product_name = productItem.product_name,
-                        product_price = productItem.product_price,
-                        product_id = productItem.product_id,
-                        product_quantity = productItem.product_count,
-                        user_id = preferenceManager.getLoginUserId()!!,
-                        user_name = preferenceManager.getLoginUserName()!!,
-                        order_date = java.util.Date().toString(),
-                        totalPrice = (productItem.product_count * productItem.product_price) + 10 + (subTotalPrice * 18 / 100).toInt(),
-                        delivery_charge = 10,
-                        tax_charge = (subTotalPrice * 18 / 100).toInt(),//according to gst 18%
-                        subtotal_price = productItem.product_count * productItem.product_price,
-                        isApproved = 0,
-                        user_address = preferenceManager.getLoginAddress()!!,
-                        user_email = preferenceManager.getLoginEmailId()!!,
-                        user_mobile = preferenceManager.getLoginMobileNo()!!,
-                        user_pinCode = preferenceManager.getLoginPinCode()!!,
+                val itemCartListJson = Json.encodeToString(cartList.toList())
+                navController.navigate(
+                    CreateOrderScreenRoute(
+                        cartList = itemCartListJson,
+                        subTotalPrice = subTotalPrice
                     )
-
-                    orderList.add(orderItem)
-                    Log.d(
-                        "@OrderItem", "Product Category: ${orderItem.product_category}, " +
-                                "Product Name: ${orderItem.product_name}, " +
-                                "Product Price: ${orderItem.product_price}, " +
-                                "Product ID: ${orderItem.product_id}, " +
-                                "Product Quantity: ${orderItem.product_quantity}, " +
-                                "User ID: ${orderItem.user_id}, " +
-                                "User Name: ${orderItem.user_name}, " +
-                                "Order Date: ${orderItem.order_date}, " +
-                                "Total Price: ${orderItem.totalPrice}, " +
-                                "Delivery Charge: ${orderItem.delivery_charge}, " +
-                                "Tax Charge: ${orderItem.tax_charge}, " +
-                                "Subtotal Price: ${orderItem.subtotal_price}, " +
-                                "Is Approved: ${orderItem.isApproved}, " +
-                                "User Address: ${orderItem.user_address}, " +
-                                "User Email: ${orderItem.user_email}, " +
-                                "User Mobile: ${orderItem.user_mobile}, " +
-                                "User Pin Code: ${orderItem.user_pinCode}"
-                    )
-                }
-                orderViewmodel.createOrder(orderList)
-                cartViewmodel.clearCart()
-                navController.navigate(OrderScreenRoute)
-
+                )
             }
         }
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.BottomEnd) {
@@ -289,15 +252,20 @@ fun CartPriceCard(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceBetween
         ) {
-            val deliveryCharge = 10.00
-            val taxCharge = (subTotalPrice*18/100).toFloat()
-            val discount  = (subTotalPrice*5/100).toFloat()
-            val totalPrice = (subTotalPrice+deliveryCharge+taxCharge-discount).roundToInt()
+            val totalPrice = totalPriceCalculate(subTotalPrice)
 
             TextRow(priceName = "Sub-Total", price = subTotalPrice.toString())
-            TextRow(priceName = "Delivery Charge", price = deliveryCharge.toString())
-            TextRow(priceName = "Tax Charge 18%", price = taxCharge.toString())
-            TextRow(priceName = "Discount 5%", price = discount.toString())
+            TextRow(
+                priceName = "Delivery Charge",
+                price = if (calculateDeliveryCharge(subTotalPrice) > 0) calculateDeliveryCharge(
+                    subTotalPrice
+                ).toString() else "Free"
+            )
+            TextRow(
+                priceName = "Tax Charge 18%",
+                price = calculateTaxCharge(subTotalPrice).toString()
+            )
+            TextRow(priceName = "Discount 5%", price = calculateDiscount(subTotalPrice).toString())
 
             Spacer(modifier = Modifier.height(10.dp))
 
@@ -364,7 +332,7 @@ fun TextRow(priceName: String, price: String) {
             )
         )
         Text(
-            text = "$price ₹", style = TextStyle(
+            text = stringResource(R.string.rs, price), style = TextStyle(
                 fontSize = 18.sp,
                 fontFamily = FontFamily(Font(R.font.roboto_bold)),
                 color = GreenColor

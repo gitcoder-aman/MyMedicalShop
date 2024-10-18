@@ -20,13 +20,14 @@ fun TextFieldComponent(
     value: String,
     onValueChange: (String) -> Unit,
     placeholder: String,
-    leadingIcon: Int,
+    leadingIcon: Int
 ) {
 
     OutlinedTextField(
         value = value,
         onValueChange = onValueChange,
         placeholder = { Text(placeholder) },
+
         leadingIcon = {
             Icon(
                 painter = painterResource(leadingIcon),

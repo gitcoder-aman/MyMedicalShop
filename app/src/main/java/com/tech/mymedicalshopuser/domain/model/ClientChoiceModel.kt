@@ -1,5 +1,8 @@
 package com.tech.mymedicalshopuser.domain.model
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class ClientChoiceModel(
     val product_category : String,
     val product_description : String,

@@ -1,4 +1,4 @@
-package com.tech.mymedicalshopuser.ui_layer.screens.order_screen
+package com.tech.mymedicalshopuser.ui_layer.screens.order_screen.component
 
 
 import androidx.compose.foundation.BorderStroke

@@ -40,8 +40,8 @@ import com.tech.mymedicalshopuser.ui_layer.common.MulticolorText
 import com.tech.mymedicalshopuser.ui_layer.component.ButtonComponent
 import com.tech.mymedicalshopuser.ui_layer.component.TextFieldComponent
 import com.tech.mymedicalshopuser.ui_layer.navigation.SignUpRoute
-import com.tech.mymedicalshopuser.ui_layer.navigation.VerificationScreenRoute
 import com.tech.mymedicalshopuser.utils.ISOK
+import com.tech.mymedicalshopuser.utils.PreferenceManager
 import com.tech.mymedicalshopuser.viewmodel.MedicalAuthViewmodel
 
 @Composable
@@ -52,6 +52,8 @@ fun SignInScreen(
     val context = LocalContext.current
     val loginResponseState by medicalAuthViewmodel.loginResponseState.collectAsState()
     val loginScreenState by medicalAuthViewmodel.loginScreenStateData.collectAsState()
+    val preferenceManager = PreferenceManager(context)
+
 
     when {
         loginResponseState.isLoading -> {
@@ -65,6 +67,8 @@ fun SignInScreen(
                 if(loginResponseState.data!!.status == ISOK) {
                     val userId = loginResponseState.data!!.message
                     medicalAuthViewmodel.resetLoginScreenStateData()
+                    preferenceManager.setLoginUserId(userId = userId)
+                    preferenceManager.setLoginEmailId(loginScreenState.email.value)
 
                     Toast.makeText(
                         context,

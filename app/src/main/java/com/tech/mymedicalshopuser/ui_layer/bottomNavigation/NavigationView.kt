@@ -13,6 +13,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Person
+import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.icons.outlined.ShoppingCart
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -31,15 +32,15 @@ import com.tech.mymedicalshopuser.ui.theme.GreenColor
 import com.tech.mymedicalshopuser.ui.theme.LightGreenColor
 import com.tech.mymedicalshopuser.ui_layer.navigation.CartScreenRoute
 import com.tech.mymedicalshopuser.ui_layer.navigation.HomeScreenRoute
-import com.tech.mymedicalshopuser.ui_layer.navigation.OrderScreenRoute
 import com.tech.mymedicalshopuser.ui_layer.navigation.ProfileScreenRoute
+import com.tech.mymedicalshopuser.ui_layer.navigation.SearchScreenRoute
 
 @Composable
 fun NavigationView(
     navController: NavHostController, selectedItem: Int, onSelectedItem: (index: Int) -> Unit
 ) {
 
-    val items = listOf("Home", "Cart", "Order", "Profile")
+    val items = listOf("Home", "Search", "Cart", "Profile")
 
     Box(
         modifier = Modifier.fillMaxWidth()
@@ -64,12 +65,12 @@ fun NavigationView(
                                 }
                             }
                             1->{
-                                navController.navigate(CartScreenRoute){
+                                navController.navigate(SearchScreenRoute){
                                     navController.popBackStack()
                                 }
                             }
                             2->{
-                                navController.navigate(OrderScreenRoute){
+                                navController.navigate(CartScreenRoute){
                                     navController.popBackStack()
                                 }
                             }
@@ -99,7 +100,7 @@ fun NavigationView(
 
                             1 -> {
                                 Icon(
-                                    Icons.Outlined.ShoppingCart,
+                                    Icons.Outlined.Search,
                                     contentDescription = null,
                                     tint = Color.White,
                                     modifier = Modifier.size(
@@ -114,7 +115,7 @@ fun NavigationView(
 
                             2 -> {
                                 Icon(
-                                    painter = painterResource(R.drawable.shopping_bag),
+                                    Icons.Outlined.ShoppingCart,
                                     contentDescription = null, tint = Color.White,
                                     modifier = Modifier.size(
                                         if (selectedItem == index) {

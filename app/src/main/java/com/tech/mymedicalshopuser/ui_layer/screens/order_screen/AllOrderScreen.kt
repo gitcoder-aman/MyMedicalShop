@@ -15,11 +15,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -28,30 +25,23 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.tech.mymedicalshopuser.R
 import com.tech.mymedicalshopuser.data.response.order.MedicalOrderResponseItem
-import com.tech.mymedicalshopuser.data.response.product.ProductModelItem
-import com.tech.mymedicalshopuser.ui_layer.bottomNavigation.NavigationView
 import com.tech.mymedicalshopuser.ui_layer.navigation.HomeScreenRoute
-import com.tech.mymedicalshopuser.ui_layer.navigation.OrderScreenRoute
+import com.tech.mymedicalshopuser.ui_layer.screens.order_screen.component.OrderCardView
 import com.tech.mymedicalshopuser.utils.PreferenceManager
-import com.tech.mymedicalshopuser.viewmodel.MedicalAuthViewmodel
 import com.tech.mymedicalshopuser.viewmodel.OrderViewmodel
 
 @Composable
-fun OrderScreen(
+fun AllOrderScreen(
     navController: NavHostController,
-    orderViewmodel: OrderViewmodel,
+    orderViewmodel: OrderViewmodel
 ) {
-    var selectedItem by remember {
-        mutableIntStateOf(2)
-    }
     val context = LocalContext.current
-    val getAllUserResponseState = orderViewmodel.getAllUserOrders.collectAsState()
+    val getAllUserOrderResponseState = orderViewmodel.getAllUserOrders.collectAsState()
     val createOrderResponse = orderViewmodel.createOrder.collectAsState()
     val preferenceManager = PreferenceManager(context)
 
@@ -60,14 +50,14 @@ fun OrderScreen(
     val getAllUserOrderList = remember { mutableStateListOf<MedicalOrderResponseItem>() }
 
     // Fetch all user orders when the composable is first composed
-    LaunchedEffect(getAllUserResponseState.value) {
+    LaunchedEffect(getAllUserOrderResponseState.value) {
         orderViewmodel.getAllUserOrders(preferenceManager.getLoginUserId()!!)
     }
 
     // Update the order list when data changes
-    LaunchedEffect(getAllUserResponseState.value) {
-        if (getAllUserResponseState.value.data != null) {
-            val response = getAllUserResponseState.value.data
+    LaunchedEffect(getAllUserOrderResponseState.value) {
+        if (getAllUserOrderResponseState.value.data != null) {
+            val response = getAllUserOrderResponseState.value.data
             if (response?.isSuccessful!!) {
                 getAllUserOrderList.clear() // Clear the previous list
                 response.body()?.let { orders ->
@@ -77,22 +67,22 @@ fun OrderScreen(
         }
     }
     when {
-        getAllUserResponseState.value.loading -> {
+        getAllUserOrderResponseState.value.loading -> {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 Text(text = "Loading...")
             }
         }
 
-        getAllUserResponseState.value.data != null -> {
+        getAllUserOrderResponseState.value.data != null -> {
             Log.d(
                 "@getAllOrder",
-                "OrderScreen: ${getAllUserResponseState.value.data!!.body()?.size}"
+                "OrderScreen: ${getAllUserOrderResponseState.value.data!!.body()?.size}"
             )
         }
 
-        getAllUserResponseState.value.error != null -> {
-            Log.d("@getAllOrder", "OrderScreen: ${getAllUserResponseState.value.error}")
-            Toast.makeText(context, getAllUserResponseState.value.error, Toast.LENGTH_SHORT).show()
+        getAllUserOrderResponseState.value.error != null -> {
+            Log.d("@getAllOrder", "OrderScreen: ${getAllUserOrderResponseState.value.error}")
+            Toast.makeText(context, getAllUserOrderResponseState.value.error, Toast.LENGTH_SHORT).show()
         }
     }
     when {
@@ -142,30 +132,14 @@ fun OrderScreen(
                 }
             }
         }
-        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.BottomEnd) {
-            NavigationView(
-                navController,
-                selectedItem = selectedItem,
-                onSelectedItem = {
-                    selectedItem = it
-                    Toast.makeText(context, it.toString(), Toast.LENGTH_SHORT).show()
-                }
-            )
-        }
     }
-
     BackHandler {
-        navController.navigate(HomeScreenRoute) {
+        navController.navigate(HomeScreenRoute){
             navController.graph.startDestinationRoute?.let { homeScreen ->
                 popUpTo(homeScreen) {
-                    saveState = true
-                }
-                restoreState = true
-                launchSingleTop = true
-                navController.popBackStack(
-                    OrderScreenRoute,
                     inclusive = true
-                ) // Clear back stack and go to Screen1
+                }
+                launchSingleTop = true
             }
         }
     }

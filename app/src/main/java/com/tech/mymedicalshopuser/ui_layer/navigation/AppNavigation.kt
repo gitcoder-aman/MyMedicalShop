@@ -11,17 +11,23 @@ import androidx.navigation.toRoute
 import com.tech.mymedicalshopuser.domain.model.ClientChoiceModel
 import com.tech.mymedicalshopuser.ui_layer.screens.cart_screen.CartScreen
 import com.tech.mymedicalshopuser.ui_layer.screens.HomeScreen
-import com.tech.mymedicalshopuser.ui_layer.screens.order_screen.OrderScreen
 import com.tech.mymedicalshopuser.ui_layer.screens.ProfileScreen
+import com.tech.mymedicalshopuser.ui_layer.screens.SearchScreen
 import com.tech.mymedicalshopuser.ui_layer.screens.SignInScreen
 import com.tech.mymedicalshopuser.ui_layer.screens.SignupScreen
 import com.tech.mymedicalshopuser.ui_layer.screens.VerificationPendingScreen
+import com.tech.mymedicalshopuser.ui_layer.screens.order_screen.AddressScreen
+import com.tech.mymedicalshopuser.ui_layer.screens.order_screen.AllOrderScreen
+import com.tech.mymedicalshopuser.ui_layer.screens.order_screen.CompletedOrderScreen
+import com.tech.mymedicalshopuser.ui_layer.screens.order_screen.CreateOrderScreen
 import com.tech.mymedicalshopuser.ui_layer.screens.product_detail.ProductDetailScreen
 import com.tech.mymedicalshopuser.utils.PreferenceManager
+import com.tech.mymedicalshopuser.viewmodel.AddressViewModel
 import com.tech.mymedicalshopuser.viewmodel.CartViewmodel
 import com.tech.mymedicalshopuser.viewmodel.MainViewmodel
 import com.tech.mymedicalshopuser.viewmodel.MedicalAuthViewmodel
 import com.tech.mymedicalshopuser.viewmodel.OrderViewmodel
+import kotlinx.serialization.json.Json
 
 @Composable
 fun AppNavigation(navController: NavHostController) {
@@ -29,6 +35,7 @@ fun AppNavigation(navController: NavHostController) {
     val mainViewmodel: MainViewmodel = hiltViewModel()
     val cartViewmodel : CartViewmodel = hiltViewModel()
     val orderViewmodel : OrderViewmodel = hiltViewModel()
+    val addressViewmodel : AddressViewModel = hiltViewModel()
 
     val context = LocalContext.current
     val preferenceManager = PreferenceManager(context)
@@ -56,13 +63,28 @@ fun AppNavigation(navController: NavHostController) {
             HomeScreen(navController,mainViewmodel)
         }
         composable<CartScreenRoute> {
-            CartScreen(navController, cartViewmodel,orderViewmodel)
+            CartScreen(navController, cartViewmodel)
         }
-        composable<OrderScreenRoute> {
-            OrderScreen(navController,orderViewmodel,)
+        composable<OrderTrackScreenRoute> {
+            AllOrderScreen(navController,orderViewmodel)
         }
         composable<ProfileScreenRoute> {
             ProfileScreen(navController)
+        }
+        composable<SearchScreenRoute> {
+            SearchScreen(navController)
+        }
+        composable<AddressScreenRoute> {
+            AddressScreen(navController,addressViewmodel)
+        }
+        composable<CompletedOrderScreenRoute> {
+            CompletedOrderScreen(navController)
+        }
+        composable<CreateOrderScreenRoute> {backStackEntry ->
+            val orderListInJson = backStackEntry.toRoute<CreateOrderScreenRoute>().cartList
+            val cartList = orderListInJson.let { Json.decodeFromString<List<ClientChoiceModel>>(it) }
+            val subTotalPrice = backStackEntry.toRoute<CreateOrderScreenRoute>().subTotalPrice
+            CreateOrderScreen(cartList,orderViewmodel,addressViewmodel,subTotalPrice,cartViewmodel,navController)
         }
         composable<ProductDetailScreenRoute> { navBackStackEntry ->
             val productName = navBackStackEntry.toRoute<ProductDetailScreenRoute>().productName
