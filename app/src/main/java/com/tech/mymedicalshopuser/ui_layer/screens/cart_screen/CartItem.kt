@@ -1,4 +1,4 @@
-package com.tech.mymedicalshopuser.ui_layer.component
+package com.tech.mymedicalshopuser.ui_layer.screens.cart_screen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -31,9 +31,11 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import com.tech.mymedicalshopuser.R
 import com.tech.mymedicalshopuser.domain.model.ClientChoiceModelEntity
 import com.tech.mymedicalshopuser.ui.theme.GreenColor
+import com.tech.mymedicalshopuser.utils.GET_IMG_URL
 
 @Composable
 fun CartItem(
@@ -62,10 +64,9 @@ fun CartItem(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
         ) {
-            Image(
-                painter = painterResource(id = R.drawable.med_4),
-                contentDescription = "",
-                contentScale = ContentScale.FillWidth,
+            AsyncImage(
+                model = GET_IMG_URL +productItem.product_image_id,
+                contentDescription = null, contentScale = ContentScale.FillWidth,
                 modifier = Modifier
                     .weight(0.33f)
                     .padding(5.dp)

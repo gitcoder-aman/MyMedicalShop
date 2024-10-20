@@ -39,7 +39,7 @@ data class CreateOrderScreenRoute(
 data class ProductDetailScreenRoute(
     val productName: String,
     val productId: String,
-    val productImage: String,
+    val productImageId: String,
     val productPrice: Int,
     val productRating: Float,
     val productStock: Int,

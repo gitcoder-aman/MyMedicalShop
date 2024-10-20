@@ -34,10 +34,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.net.toUri
 import coil.compose.AsyncImage
-import coil.compose.rememberAsyncImagePainter
-import coil.request.ImageRequest
-import coil.size.Scale
 import com.tech.mymedicalshopuser.R
+import com.tech.mymedicalshopuser.utils.GET_IMG_URL
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -69,28 +67,14 @@ fun ClientItemView(
                     .height(150.dp),
                 contentAlignment = Alignment.TopStart
             ) {
-//                val painter = rememberAsyncImagePainter(
-//                    model = ImageRequest.Builder(LocalContext.current)
-//                        .data(itemImage.toUri())
-//                        .scale(Scale.FILL) // Adjust the scale if necessary
-//                        .build()
-//                )
-                Image(
-                    painter = painterResource(R.drawable.med_1),
+                AsyncImage(
+                    model = GET_IMG_URL+itemImage,
                     contentDescription = null,
                     modifier = Modifier
                         .fillMaxSize()
                         .clip(RoundedCornerShape(8.dp)),
                     contentScale = ContentScale.Crop
                 )
-//                AsyncImage(
-//                    model = itemImage.toUri(),
-//                    contentDescription = null,
-//                    modifier = Modifier
-//                        .fillMaxSize()
-//                        .clip(RoundedCornerShape(8.dp)),
-//                    contentScale = ContentScale.Crop
-//                )
                 Icon(
                     painter = painterResource(R.drawable.heart),
                     contentDescription = null,

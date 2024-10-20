@@ -1,6 +1,5 @@
 package com.tech.mymedicalshopuser.ui_layer.screens.order_screen.component
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -20,15 +19,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import com.tech.mymedicalshopuser.R
 import com.tech.mymedicalshopuser.domain.model.ClientChoiceModelEntity
 import com.tech.mymedicalshopuser.ui.theme.LightGreenColor
+import com.tech.mymedicalshopuser.utils.GET_IMG_URL
 
 @Composable
 fun OrderItemView(
@@ -49,13 +49,13 @@ fun OrderItemView(
                 .padding(8.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Image(
-                painter = painterResource(R.drawable.med_4), // Use item data
-                contentDescription = null,
+
+            AsyncImage(
+                model = GET_IMG_URL+cart.product_image_id,
+                contentDescription = null, contentScale = ContentScale.Fit,
                 modifier = Modifier
                     .weight(1f)
-                    .size(80.dp),
-                contentScale = ContentScale.Fit
+                    .size(80.dp)
             )
             Spacer(Modifier.width(4.dp))
             Column(

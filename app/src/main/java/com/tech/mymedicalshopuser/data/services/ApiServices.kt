@@ -13,8 +13,6 @@ import retrofit2.http.POST
 import java.util.Date
 
 interface ApiServices {
-    @GET("getAllUsers")
-    suspend fun getAllUsers(): Response<ArrayList<GetAllUsersResponseItem>>
 
     @FormUrlEncoded
     @POST("signup")
@@ -50,6 +48,7 @@ interface ApiServices {
         @Field("product_id") productId : String,
         @Field("product_name") productName : String,
         @Field("product_category") productCategory : String,
+        @Field("product_image_id") productImageId : String,
         @Field("user_name") userName : String,
         @Field("isApproved") isApproved : Int,
         @Field("product_quantity") productQuantity : Int,

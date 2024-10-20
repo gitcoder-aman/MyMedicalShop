@@ -239,14 +239,14 @@ fun HomeScreen(
                     ) {
                         items(getAllProductList) {
                             ClientItemView(
-                                itemImage = it.product_image,
+                                itemImage = it.product_image_id,
                                 price = it.product_price,
                                 rating = it.product_rating.toFloat(),
                                 itemName = it.product_name
                             ){
                                 navController.navigate(ProductDetailScreenRoute(
                                     productName = it.product_name,
-                                    productImage = it.product_image,
+                                    productImageId = it.product_image_id,
                                     productPrice = it.product_price,
                                     productRating = it.product_rating.toFloat(),
                                     productStock = it.product_stock,
@@ -296,14 +296,14 @@ fun HomeScreen(
                     ) {
                         items(getAllProductList) {
                             ClientItemView(
-                                itemImage = it.product_image,
+                                itemImage = it.product_image_id,
                                 price = it.product_price,
                                 rating = it.product_rating.toFloat(),
                                 itemName = it.product_name
                             ){
                                 navController.navigate(ProductDetailScreenRoute(
                                   productName = it.product_name,
-                                    productImage = it.product_image,
+                                    productImageId = it.product_image_id,
                                     productPrice = it.product_price,
                                     productRating = it.product_rating.toFloat(),
                                     productStock = it.product_stock,

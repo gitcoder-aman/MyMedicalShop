@@ -16,32 +16,33 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.tech.mymedicalshopuser.R
-import com.tech.mymedicalshopuser.state.screen_state.AddAddressScreenState
+import com.tech.mymedicalshopuser.local.entity.AddressEntity
 import com.tech.mymedicalshopuser.ui.theme.GreenColor
 import com.tech.mymedicalshopuser.ui.theme.LightGreenColor
 
 @Composable
-fun ShippingAddressItemView(address: AddAddressScreenState,selectedAddress : Boolean,onClick:()->Unit) {
+fun ShippingAddressItemView(address: AddressEntity, selectedAddress: Boolean, onClick: () -> Unit) {
 
     Box(
         modifier = Modifier
             .padding(4.dp)
             .height(50.dp)
-            .width(100.dp)
+            .width(150.dp)
             .shadow(shape = RoundedCornerShape(8.dp), elevation = 2.dp)
-            .background(if(selectedAddress) GreenColor else LightGreenColor).clickable { onClick() },
+            .background(if (selectedAddress) GreenColor else LightGreenColor)
+            .clickable { onClick() },
         contentAlignment = Alignment.Center
     ) {
         Text(
-            text = address.address.value,
+            text = address.address,
             style = MaterialTheme.typography.titleLarge,
-            color = if(selectedAddress) Color.Black else Color.Gray,
+            color = if (selectedAddress) Color.Black else Color.Gray,
             fontSize = 18.sp,
-            fontFamily = FontFamily(Font(R.font.roboto_medium))
+            fontFamily = FontFamily(Font(R.font.roboto_medium)),
+            modifier = Modifier.align(Alignment.Center).padding(4.dp)
         )
     }
 

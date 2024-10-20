@@ -56,7 +56,7 @@ fun ProfileScreen(navController: NavHostController) {
             verticalArrangement = Arrangement.Top
         ) {
             item {
-                androidx.compose.material.Text(text = "Profile Screen")
+                Text(text = "Profile Screen")
             }
         }
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.BottomEnd) {

@@ -49,6 +49,8 @@ import androidx.navigation.NavController
 import com.tech.mymedicalshopuser.R
 import com.tech.mymedicalshopuser.data.response.order.MedicalOrderResponseItem
 import com.tech.mymedicalshopuser.domain.model.ClientChoiceModelEntity
+import com.tech.mymedicalshopuser.local.entity.AddressEntity
+import com.tech.mymedicalshopuser.local.viewmodel.RoomAddressViewModel
 import com.tech.mymedicalshopuser.local.viewmodel.RoomCartViewModel
 import com.tech.mymedicalshopuser.state.screen_state.AddAddressScreenState
 import com.tech.mymedicalshopuser.ui.theme.GreenColor
@@ -62,20 +64,19 @@ import com.tech.mymedicalshopuser.utils.PreferenceManager
 import com.tech.mymedicalshopuser.utils.calculateDeliveryCharge
 import com.tech.mymedicalshopuser.utils.calculateTaxCharge
 import com.tech.mymedicalshopuser.utils.totalPriceCalculate
-import com.tech.mymedicalshopuser.viewmodel.AddressViewModel
 import com.tech.mymedicalshopuser.viewmodel.OrderViewmodel
 
 @Composable
 fun CreateOrderScreen(
     cartList: List<ClientChoiceModelEntity>,
     orderViewmodel: OrderViewmodel,
-    addressViewModel: AddressViewModel,
+    roomAddressViewModel: RoomAddressViewModel,
     subTotalPrice: Float,
     roomCartViewModel: RoomCartViewModel,
     navController: NavController
 ) {
 
-    val addressList by addressViewModel.getAllAddressList.collectAsState()
+    val addressList by roomAddressViewModel.addressList.collectAsState()
     var selectedAddressIndex by remember { mutableStateOf(-1) } // -1 indicates no selection
     val context = LocalContext.current
     val preferenceManager = PreferenceManager(context)
@@ -171,7 +172,7 @@ fun CreateOrderScreen(
                                 productId = cart.product_id,
                                 productCategory = cart.product_category,
                                 productPrice = cart.product_price,
-                                productImage = cart.product_image,
+                                productImageId = cart.product_image_id,
                                 productDescription = cart.product_description,
                                 productPower = cart.product_power,
                                 productStock = cart.product_stock,
@@ -259,7 +260,7 @@ fun CreateOrderScreen(
 }
 
 fun createOrderOneByOne(
-    address: AddAddressScreenState,
+    address: AddressEntity,
     cartList: List<ClientChoiceModelEntity>,
     preferenceManager: PreferenceManager
 ): MutableList<MedicalOrderResponseItem> {
@@ -272,17 +273,18 @@ fun createOrderOneByOne(
             product_id = productItem.product_id,
             product_quantity = productItem.product_count,
             user_id = preferenceManager.getLoginUserId()!!,
-            user_name = address.fullName.value,
+            user_name = address.fullName,
             order_date = java.util.Date().toString(),
             totalPrice = totalPriceCalculate(productItem.product_price.toFloat()),
             delivery_charge = calculateDeliveryCharge(productItem.product_price.toFloat()).toInt(),
             tax_charge = calculateTaxCharge(productItem.product_price.toFloat()).toInt(),//according to gst 18%
             subtotal_price = productItem.product_count * productItem.product_price,
             isApproved = preferenceManager.getApprovedStatus(),
-            user_address = address.address.value,
+            user_address = address.address,
             user_email = preferenceManager.getLoginEmailId()!!,
-            user_mobile = address.phoneNo.value,
-            user_pinCode = address.pinCode.value,
+            user_mobile = address.phoneNo,
+            user_pinCode = address.pinCode,
+            product_image_id = productItem.product_image_id
         )
 
         orderList.add(orderItem)

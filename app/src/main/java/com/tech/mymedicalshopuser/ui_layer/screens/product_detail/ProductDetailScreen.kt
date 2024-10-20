@@ -66,7 +66,9 @@ fun ProductDetailScreen(
                 .background(Color.White)
         ) {
             item {
-                ProductThumbnail {
+                ProductThumbnail(
+                    productImageId = productItem.product_image_id
+                ) {
                     // Handle back navigation
                     navController.navigateUp()
                 }

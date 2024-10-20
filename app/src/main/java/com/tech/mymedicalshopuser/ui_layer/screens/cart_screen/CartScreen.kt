@@ -54,7 +54,6 @@ import com.tech.mymedicalshopuser.local.viewmodel.RoomCartViewModel
 import com.tech.mymedicalshopuser.ui.theme.GreenColor
 import com.tech.mymedicalshopuser.ui.theme.WhiteGreyColor
 import com.tech.mymedicalshopuser.ui_layer.bottomNavigation.NavigationView
-import com.tech.mymedicalshopuser.ui_layer.component.CartItem
 import com.tech.mymedicalshopuser.ui_layer.navigation.CartScreenRoute
 import com.tech.mymedicalshopuser.ui_layer.navigation.CreateOrderScreenRoute
 import com.tech.mymedicalshopuser.ui_layer.navigation.HomeScreenRoute
@@ -156,7 +155,7 @@ fun CartScreen(
                                 navController.navigate(
                                     ProductDetailScreenRoute(
                                         productName = product.product_name,
-                                        productImage = product.product_image,
+                                        productImageId = product.product_image_id,
                                         productPrice = product.product_price,
                                         productRating = product.product_rating,
                                         productStock = product.product_stock,

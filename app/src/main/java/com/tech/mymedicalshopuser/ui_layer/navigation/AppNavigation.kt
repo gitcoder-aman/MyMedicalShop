@@ -9,6 +9,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
 import com.tech.mymedicalshopuser.domain.model.ClientChoiceModelEntity
+import com.tech.mymedicalshopuser.local.viewmodel.RoomAddressViewModel
 import com.tech.mymedicalshopuser.local.viewmodel.RoomCartViewModel
 import com.tech.mymedicalshopuser.ui_layer.screens.cart_screen.CartScreen
 import com.tech.mymedicalshopuser.ui_layer.screens.HomeScreen
@@ -23,7 +24,6 @@ import com.tech.mymedicalshopuser.ui_layer.screens.order_screen.CompletedOrderSc
 import com.tech.mymedicalshopuser.ui_layer.screens.order_screen.CreateOrderScreen
 import com.tech.mymedicalshopuser.ui_layer.screens.product_detail.ProductDetailScreen
 import com.tech.mymedicalshopuser.utils.PreferenceManager
-import com.tech.mymedicalshopuser.viewmodel.AddressViewModel
 import com.tech.mymedicalshopuser.viewmodel.MainViewmodel
 import com.tech.mymedicalshopuser.viewmodel.MedicalAuthViewmodel
 import com.tech.mymedicalshopuser.viewmodel.OrderViewmodel
@@ -33,9 +33,8 @@ import kotlinx.serialization.json.Json
 fun AppNavigation(navController: NavHostController) {
     val medicalAuthViewmodel: MedicalAuthViewmodel = hiltViewModel()
     val mainViewmodel: MainViewmodel = hiltViewModel()
-//    val cartViewmodel : CartViewmodel = hiltViewModel()
     val orderViewmodel : OrderViewmodel = hiltViewModel()
-    val addressViewmodel : AddressViewModel = hiltViewModel()
+    val roomAddressViewmodel : RoomAddressViewModel = hiltViewModel()
     val roomCartViewmodel : RoomCartViewModel = hiltViewModel()
 
     val context = LocalContext.current
@@ -76,7 +75,7 @@ fun AppNavigation(navController: NavHostController) {
             SearchScreen(navController)
         }
         composable<AddressScreenRoute> {
-            AddressScreen(navController,addressViewmodel)
+            AddressScreen(navController,roomAddressViewmodel)
         }
         composable<CompletedOrderScreenRoute> {
             CompletedOrderScreen(navController)
@@ -85,12 +84,12 @@ fun AppNavigation(navController: NavHostController) {
             val orderListInJson = backStackEntry.toRoute<CreateOrderScreenRoute>().cartList
             val cartList = orderListInJson.let { Json.decodeFromString<List<ClientChoiceModelEntity>>(it) }
             val subTotalPrice = backStackEntry.toRoute<CreateOrderScreenRoute>().subTotalPrice
-            CreateOrderScreen(cartList,orderViewmodel,addressViewmodel,subTotalPrice,roomCartViewmodel,navController)
+            CreateOrderScreen(cartList,orderViewmodel,roomAddressViewmodel,subTotalPrice,roomCartViewmodel,navController)
         }
         composable<ProductDetailScreenRoute> { navBackStackEntry ->
             val productName = navBackStackEntry.toRoute<ProductDetailScreenRoute>().productName
             val productId = navBackStackEntry.toRoute<ProductDetailScreenRoute>().productId
-            val productImage = navBackStackEntry.toRoute<ProductDetailScreenRoute>().productImage
+            val productImageId = navBackStackEntry.toRoute<ProductDetailScreenRoute>().productImageId
             val productPrice = navBackStackEntry.toRoute<ProductDetailScreenRoute>().productPrice
             val productRating = navBackStackEntry.toRoute<ProductDetailScreenRoute>().productRating
             val productStock = navBackStackEntry.toRoute<ProductDetailScreenRoute>().productStock
@@ -101,7 +100,7 @@ fun AppNavigation(navController: NavHostController) {
 
             val productItem = ClientChoiceModelEntity(
                 product_name = productName,
-                product_image = productImage,
+                product_image_id = productImageId,
                 product_price = productPrice,
                 product_rating = productRating,
                 product_stock = productStock,

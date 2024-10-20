@@ -94,7 +94,8 @@ class MedicalRepositoryImpl @Inject constructor(
                     userAddress = order.user_address,
                     userPinCode = order.user_pinCode,
                     userMobile = order.user_mobile,
-                    userEmail = order.user_email
+                    userEmail = order.user_email,
+                    productImageId = order.product_image_id
                 )
                 emit(MedicalResponseState.Success(response))
             }

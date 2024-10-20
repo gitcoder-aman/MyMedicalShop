@@ -5,6 +5,7 @@ import androidx.room.Room
 import com.tech.mymedicalshopuser.data.services.ApiServices
 import com.tech.mymedicalshopuser.domain.repository.MedicalRepository
 import com.tech.mymedicalshopuser.data.repository.MedicalRepositoryImpl
+import com.tech.mymedicalshopuser.local.dao.AddressDao
 import com.tech.mymedicalshopuser.local.dao.CartDao
 import com.tech.mymedicalshopuser.local.database.AppDatabase
 import com.tech.mymedicalshopuser.utils.BASE_URL
@@ -51,12 +52,18 @@ class AppModule {
             appContext,
             AppDatabase::class.java,
             "medical_database"
-        ).build()
+        ).fallbackToDestructiveMigration().build()
     }
 
     @Provides
+    @Singleton
     fun provideCartDao(database: AppDatabase): CartDao {
         return database.cartDao()
+    }
+    @Provides
+    @Singleton
+    fun provideAddressDao(database: AppDatabase) : AddressDao{
+        return database.addressDao()
     }
 
 }

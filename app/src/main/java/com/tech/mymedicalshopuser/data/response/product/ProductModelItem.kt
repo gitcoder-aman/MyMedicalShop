@@ -6,7 +6,7 @@ data class ProductModelItem(
     val product_description: String,
     val product_expiry_date: String,
     val product_id: String,
-    val product_image: String,
+    val product_image_id: String,
     val product_name: String,
     val product_power: String,
     val product_price: Int,

@@ -28,10 +28,13 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 import com.tech.mymedicalshopuser.R
+import com.tech.mymedicalshopuser.utils.GET_IMG_URL
 
 @Composable
 fun ProductThumbnail(
+    productImageId : String,
     onBackClick:()->Unit
 ) {
 
@@ -39,19 +42,12 @@ fun ProductThumbnail(
         modifier = Modifier
             .fillMaxSize()
     ) {
-//        AsyncImage(
-//            model = exerciseImage.toString(),
-//            contentDescription = null, contentScale = ContentScale.Crop,
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .height(300.dp)
-//        )
-        Image(
-            painter = painterResource(R.drawable.med_1),
-            contentDescription = null,
+        AsyncImage(
+            model = GET_IMG_URL+productImageId,
+            contentDescription = null, contentScale = ContentScale.Crop,
             modifier = Modifier
                 .fillMaxWidth()
-                .height(300.dp), contentScale = ContentScale.Crop
+                .height(300.dp)
         )
         Icon(
             imageVector = Icons.Default.KeyboardArrowLeft,
@@ -86,35 +82,6 @@ fun ProductThumbnail(
                 },
             tint = if (false) Color.Red else Color.Black
         )
-
-//        Column(
-//            modifier = Modifier
-//                .fillMaxSize()
-//                .padding(top = 300.dp, start = 8.dp, end = 8.dp)
-//        ) {
-//            Spacer(modifier = Modifier.height(8.dp))
-//            TextComponent(
-//                text = "$workoutType Workout",
-//                fontSize = 12.sp,
-//                font = R.font.sans_medium,
-//                color = colorResource(
-//                    id = R.color.orangeColor
-//                )
-//            )
-//            Spacer(modifier = Modifier.height(4.dp))
-//            TextComponent(text = exerciseName.toString(), fontSize = 24.sp, font = R.font.sans_bold)
-//            Spacer(modifier = Modifier.height(14.dp))
-//            TextComponent(
-//                text = exerciseListSize + ".109 kcl",
-//                fontSize = 12.sp,
-//                font = R.font.sans_light
-//            )
-//            Spacer(modifier = Modifier.height(12.dp))
-//            TextComponent(text = "Exercise", fontSize = 16.sp, font = R.font.sans_medium)
-//            Spacer(modifier = Modifier.height(8.dp))
-//
-//
-//        }
     }
 
 }

@@ -22,6 +22,7 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -31,15 +32,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.tech.mymedicalshopuser.R
-import com.tech.mymedicalshopuser.state.screen_state.AddAddressScreenState
+import com.tech.mymedicalshopuser.local.entity.AddressEntity
+import com.tech.mymedicalshopuser.local.viewmodel.RoomAddressViewModel
 import com.tech.mymedicalshopuser.ui.theme.GreenColor
 import com.tech.mymedicalshopuser.ui.theme.LightGreenColor
-import com.tech.mymedicalshopuser.viewmodel.AddressViewModel
 
 @Composable
-fun AddressScreen(navController: NavHostController, addressViewModel: AddressViewModel) {
+fun AddressScreen(navController: NavHostController, roomAddressViewModel: RoomAddressViewModel) {
 
-    val addressScreenState by addressViewModel.getAddressScreenState.collectAsState()
+    val addressScreenState by roomAddressViewModel.getAddressScreenState.collectAsState()
 
     Box(
         modifier = Modifier
@@ -138,8 +139,18 @@ fun AddressScreen(navController: NavHostController, addressViewModel: AddressVie
 
             Button(
                 onClick = {
-                    addressViewModel.addAddress()
-                    addressViewModel.resetAddressState()
+                    roomAddressViewModel.addAddress(
+                        AddressEntity(
+                            fullName = addressScreenState.fullName.value,
+                            address = addressScreenState.address.value,
+                            city = addressScreenState.city.value,
+                            state = addressScreenState.state.value,
+                            street = addressScreenState.street.value,
+                            phoneNo = addressScreenState.phoneNo.value,
+                            pinCode = addressScreenState.pinCode.value
+                        )
+                    )
+                    roomAddressViewModel.resetAddressState()
                     navController.navigateUp()
                 },
                 modifier = Modifier

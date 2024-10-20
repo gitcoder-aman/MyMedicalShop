@@ -7,6 +7,7 @@ data class MedicalOrderResponseItem(
     val order_date: String,
     val order_id: String = "",
     val product_category: String,
+    val product_image_id: String,
     val product_id: String,
     val product_name: String,
     val product_price: Int,
