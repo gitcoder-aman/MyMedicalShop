@@ -15,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
+import com.tech.mymedicalshopuser.ui.theme.LightGreenColor
 import com.tech.mymedicalshopuser.ui.theme.WhiteGreyColor
 import com.tech.mymedicalshopuser.ui_layer.bottomNavigation.NavigationView
 import com.tech.mymedicalshopuser.ui_layer.navigation.HomeScreenRoute

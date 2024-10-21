@@ -12,4 +12,5 @@ val Pink40 = Color(0xFF7D5260)
 
 val GreenColor = Color(0xFF15CD87)
 val LightGreenColor = Color(0xFFC9F3E1)
+val ProfileGreenColor = Color(0xFFB4EFD2)
 val WhiteGreyColor = Color(0xFFE9EEEA)

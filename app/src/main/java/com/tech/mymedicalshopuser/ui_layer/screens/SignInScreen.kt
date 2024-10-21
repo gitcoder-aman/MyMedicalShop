@@ -39,7 +39,9 @@ import com.tech.mymedicalshopuser.ui.theme.GreenColor
 import com.tech.mymedicalshopuser.ui_layer.common.MulticolorText
 import com.tech.mymedicalshopuser.ui_layer.component.ButtonComponent
 import com.tech.mymedicalshopuser.ui_layer.component.TextFieldComponent
+import com.tech.mymedicalshopuser.ui_layer.navigation.HomeScreenRoute
 import com.tech.mymedicalshopuser.ui_layer.navigation.SignUpRoute
+import com.tech.mymedicalshopuser.ui_layer.navigation.VerificationScreenRoute
 import com.tech.mymedicalshopuser.utils.ISOK
 import com.tech.mymedicalshopuser.utils.PreferenceManager
 import com.tech.mymedicalshopuser.viewmodel.MedicalAuthViewmodel
@@ -63,21 +65,33 @@ fun SignInScreen(
         }
 
         loginResponseState.data != null -> {
-            LaunchedEffect(Unit) {
-                if(loginResponseState.data!!.status == ISOK) {
+            LaunchedEffect(loginResponseState.data) {
+                if (loginResponseState.data!!.status == ISOK && loginResponseState.data!!.message != null) {
                     val userId = loginResponseState.data!!.message
-                    medicalAuthViewmodel.resetLoginScreenStateData()
+
                     preferenceManager.setLoginUserId(userId = userId)
                     preferenceManager.setLoginEmailId(loginScreenState.email.value)
+                    medicalAuthViewmodel.resetLoginScreenStateData()
+                    medicalAuthViewmodel.clearLoginResponseData()
+
+                    if(preferenceManager.getApprovedStatus() == 1) {
+                        navController.navigate(HomeScreenRoute) {
+                            navController.popBackStack()
+                        }
+                    }else{
+                        navController.navigate(VerificationScreenRoute(userId)) {
+                            navController.popBackStack()
+                        }
+                    }
 
                     Toast.makeText(
                         context,
                         "Login Successfully $userId",
                         Toast.LENGTH_SHORT
                     ).show()
-                }
-                else {
-                    Toast.makeText(context, "Login Failed", Toast.LENGTH_SHORT).show()
+
+                } else {
+                    Toast.makeText(context, "Wrong Credentials", Toast.LENGTH_SHORT).show()
                 }
             }
 

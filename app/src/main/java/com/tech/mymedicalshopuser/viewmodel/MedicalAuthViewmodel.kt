@@ -120,4 +120,11 @@ class MedicalAuthViewmodel @Inject constructor(
             password = mutableStateOf("")
         )
     }
+    fun clearLoginResponseData(){
+        _loginResponseState.value = MedicalAuthResponseSate(
+            isLoading = false,
+            data = null,
+            error = null
+        )
+    }
 }

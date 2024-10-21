@@ -15,7 +15,7 @@ object HomeScreenRoute
 object CartScreenRoute
 
 @Serializable
-object OrderTrackScreenRoute
+object AllOrderScreenRoute
 
 @Serializable
 object ProfileScreenRoute
@@ -28,6 +28,9 @@ object AddressScreenRoute
 
 @Serializable
 object CompletedOrderScreenRoute
+
+@Serializable
+object MyAccountScreenRoute
 
 @Serializable
 data class CreateOrderScreenRoute(

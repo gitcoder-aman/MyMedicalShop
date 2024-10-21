@@ -27,6 +27,6 @@ fun calculateDiscount(
 fun calculateDeliveryCharge(
     subTotalPrice: Float
 ) : Float{
-    val deliveryCharge = if(subTotalPrice > 1000) 0f else 20f
+    val deliveryCharge = if(subTotalPrice > 1000 || subTotalPrice.toInt() == 0) 0f else 20f
     return deliveryCharge
 }

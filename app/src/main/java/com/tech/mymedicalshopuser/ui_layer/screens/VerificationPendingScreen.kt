@@ -40,14 +40,14 @@ import com.tech.mymedicalshopuser.ui.theme.GreenColor
 import com.tech.mymedicalshopuser.ui_layer.component.ButtonComponent
 import com.tech.mymedicalshopuser.ui_layer.navigation.HomeScreenRoute
 import com.tech.mymedicalshopuser.utils.PreferenceManager
-import com.tech.mymedicalshopuser.viewmodel.MainViewmodel
+import com.tech.mymedicalshopuser.viewmodel.ProfileViewmodel
 
 
 @Composable
 fun VerificationPendingScreen(
     navController: NavHostController,
     userId: String,
-    mainViewmodel: MainViewmodel
+    mainViewmodel: ProfileViewmodel
 ) {
 
 
@@ -59,7 +59,6 @@ fun VerificationPendingScreen(
     var isApproved by remember {
         mutableStateOf(0)
     }
-
 
     when {
         getSpecificUser.isLoading -> {

@@ -242,7 +242,7 @@ fun CreateOrderScreen(
                     .height(50.dp), colors = ButtonDefaults.buttonColors(
                     containerColor = GreenColor,
                     contentColor = Color.Black
-                ), shape = RoundedCornerShape(4.dp)
+                ), shape = RoundedCornerShape(4.dp), enabled = if(subTotalPrice > 0) true else false
             ) {
                 Text(
                     text = "Place Order",

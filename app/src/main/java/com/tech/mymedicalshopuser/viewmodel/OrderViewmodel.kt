@@ -1,7 +1,6 @@
 package com.tech.mymedicalshopuser.viewmodel
 
 import android.util.Log
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tech.mymedicalshopuser.data.response.order.MedicalOrderResponseItem
@@ -9,13 +8,9 @@ import com.tech.mymedicalshopuser.domain.repository.MedicalRepository
 import com.tech.mymedicalshopuser.state.MedicalGetAllOrderState
 import com.tech.mymedicalshopuser.state.MedicalOrderResponseState
 import com.tech.mymedicalshopuser.state.MedicalResponseState
-import com.tech.mymedicalshopuser.state.screen_state.AddAddressScreenState
-import com.tech.mymedicalshopuser.state.screen_state.MedicalSignupScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 

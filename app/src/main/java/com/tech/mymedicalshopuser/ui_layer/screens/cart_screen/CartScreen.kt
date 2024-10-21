@@ -52,6 +52,7 @@ import com.airbnb.lottie.compose.rememberLottieComposition
 import com.tech.mymedicalshopuser.R
 import com.tech.mymedicalshopuser.local.viewmodel.RoomCartViewModel
 import com.tech.mymedicalshopuser.ui.theme.GreenColor
+import com.tech.mymedicalshopuser.ui.theme.LightGreenColor
 import com.tech.mymedicalshopuser.ui.theme.WhiteGreyColor
 import com.tech.mymedicalshopuser.ui_layer.bottomNavigation.NavigationView
 import com.tech.mymedicalshopuser.ui_layer.navigation.CartScreenRoute
@@ -74,7 +75,6 @@ fun CartScreen(
         mutableIntStateOf(2)
     }
     val context = LocalContext.current
-//    val cartList by cartViewmodel.cartItemsList.collectAsState()
     val cartList by roomCartViewmodel.cartList.collectAsState()
     val subTotalPrice by roomCartViewmodel.subTotalPrice.collectAsState()
 

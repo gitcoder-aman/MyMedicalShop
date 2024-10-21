@@ -9,6 +9,7 @@ import retrofit2.Response
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
+import retrofit2.http.PATCH
 import retrofit2.http.POST
 import java.util.Date
 
@@ -69,5 +70,17 @@ interface ApiServices {
     suspend fun getAllOrders(
         @Field("user_id") userId : String,
     ) : Response<ArrayList<MedicalOrderResponseItem>>
+
+    @FormUrlEncoded
+    @PATCH("updateUser")
+    suspend fun updateUserData(
+        @Field("userId") userId: String,
+        @Field("name") name: String,
+        @Field("password") password: String,
+        @Field("email") email: String,
+        @Field("phone_number") phone_number : String,
+        @Field("pinCode") pinCode: String,
+        @Field("address") address: String,
+    ) : Response<ResponseStatus>
 
 }

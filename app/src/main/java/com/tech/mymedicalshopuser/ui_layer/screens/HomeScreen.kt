@@ -46,6 +46,7 @@ import com.tech.mymedicalshopuser.data.response.product.ProductModelItem
 import com.tech.mymedicalshopuser.domain.model.categoryList
 import com.tech.mymedicalshopuser.ui.theme.GreenColor
 import com.tech.mymedicalshopuser.ui.theme.LightGreenColor
+import com.tech.mymedicalshopuser.ui.theme.WhiteGreyColor
 import com.tech.mymedicalshopuser.ui_layer.bottomNavigation.NavigationView
 import com.tech.mymedicalshopuser.ui_layer.component.CategoryItem
 import com.tech.mymedicalshopuser.ui_layer.component.ClientItemView
@@ -53,12 +54,12 @@ import com.tech.mymedicalshopuser.ui_layer.component.PagerSlider
 import com.tech.mymedicalshopuser.ui_layer.component.TextFieldComponent
 import com.tech.mymedicalshopuser.ui_layer.navigation.ProductDetailScreenRoute
 import com.tech.mymedicalshopuser.utils.PreferenceManager
-import com.tech.mymedicalshopuser.viewmodel.MainViewmodel
+import com.tech.mymedicalshopuser.viewmodel.ProfileViewmodel
 
 @Composable
 fun HomeScreen(
     navController: NavHostController,
-    mainViewmodel: MainViewmodel,
+    mainViewmodel: ProfileViewmodel,
 ) {
 
     var selectedItem by remember {
@@ -131,7 +132,7 @@ fun HomeScreen(
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color.White),
+                .background(WhiteGreyColor),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top
         ) {

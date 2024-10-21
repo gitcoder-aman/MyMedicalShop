@@ -30,7 +30,7 @@ import com.airbnb.lottie.compose.rememberLottieComposition
 import com.tech.mymedicalshopuser.R
 import com.tech.mymedicalshopuser.ui_layer.component.ButtonComponent
 import com.tech.mymedicalshopuser.ui_layer.navigation.HomeScreenRoute
-import com.tech.mymedicalshopuser.ui_layer.navigation.OrderTrackScreenRoute
+import com.tech.mymedicalshopuser.ui_layer.navigation.AllOrderScreenRoute
 
 @Composable
 fun CompletedOrderScreen(navController: NavController) {
@@ -95,7 +95,7 @@ fun CompletedOrderScreen(navController: NavController) {
                 text = "Track your Orders"
             ) {
                 //here to do on click
-                navController.navigate(OrderTrackScreenRoute)
+                navController.navigate(AllOrderScreenRoute)
             }
         }
     }

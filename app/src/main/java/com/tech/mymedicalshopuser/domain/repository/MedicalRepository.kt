@@ -38,6 +38,14 @@ interface MedicalRepository {
         userId: String
     ): Flow<MedicalResponseState<Response<ArrayList<MedicalOrderResponseItem>>>>
 
-
+    suspend fun updateUserData(
+        userId: String,
+        userName: String,
+        userEmail: String,
+        userPhone: String,
+        pinCode : String,
+        address: String,
+        password : String
+    ) : Flow<MedicalResponseState<Response<ResponseStatus>>>
 
 }

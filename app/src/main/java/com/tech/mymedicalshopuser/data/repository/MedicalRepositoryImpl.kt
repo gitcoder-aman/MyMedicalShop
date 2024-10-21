@@ -117,5 +117,33 @@ class MedicalRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun updateUserData(
+        userId : String,
+        userName: String,
+        userEmail: String,
+        userPhone: String,
+        pinCode: String,
+        address: String,
+        password: String
+    ): Flow<MedicalResponseState<Response<ResponseStatus>>> = flow{
+        emit(MedicalResponseState.Loading)
+        try {
+            val response = apiServices.updateUserData(
+                userId = userId,
+                name = userName,
+                email = userEmail,
+                phone_number = userPhone,
+                pinCode = pinCode,
+                address = address,
+                password = password
+            )
+            emit(
+                MedicalResponseState.Success(response)
+            )
+        }catch ( e : Exception){
+            emit(MedicalResponseState.Error(e.message.toString()))
+        }
+    }
+
 
 }

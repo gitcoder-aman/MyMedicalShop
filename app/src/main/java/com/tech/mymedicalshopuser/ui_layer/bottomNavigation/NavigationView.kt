@@ -19,14 +19,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import androidx.navigation.NavHostController
 import com.tech.mymedicalshopuser.R
 import com.tech.mymedicalshopuser.ui.theme.GreenColor
 import com.tech.mymedicalshopuser.ui.theme.LightGreenColor
@@ -37,7 +35,7 @@ import com.tech.mymedicalshopuser.ui_layer.navigation.SearchScreenRoute
 
 @Composable
 fun NavigationView(
-    navController: NavHostController, selectedItem: Int, onSelectedItem: (index: Int) -> Unit
+    navController: NavController, selectedItem: Int, onSelectedItem: (index: Int) -> Unit
 ) {
 
     val items = listOf("Home", "Search", "Cart", "Profile")

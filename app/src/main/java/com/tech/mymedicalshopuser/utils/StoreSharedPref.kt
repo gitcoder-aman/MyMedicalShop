@@ -23,7 +23,7 @@ class PreferenceManager(private val context: Context) {
     fun getLoginUserId(): String? {
         return isLogin.getString("isLoggedIn", "")
     }
-    fun setApprovedStatus(isApproved: Int) {
+    fun setApprovedStatus(isApproved: Int = 0) {
         with(isApprove.edit()) {
             putInt("isApproved", isApproved)
             apply()

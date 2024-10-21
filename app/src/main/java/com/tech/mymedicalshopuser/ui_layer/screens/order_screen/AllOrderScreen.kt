@@ -31,6 +31,7 @@ import androidx.navigation.NavHostController
 import com.tech.mymedicalshopuser.R
 import com.tech.mymedicalshopuser.data.response.order.MedicalOrderResponseItem
 import com.tech.mymedicalshopuser.ui_layer.navigation.HomeScreenRoute
+import com.tech.mymedicalshopuser.ui_layer.navigation.ProfileScreenRoute
 import com.tech.mymedicalshopuser.ui_layer.screens.order_screen.component.OrderCardView
 import com.tech.mymedicalshopuser.utils.PreferenceManager
 import com.tech.mymedicalshopuser.viewmodel.OrderViewmodel
@@ -134,10 +135,10 @@ fun AllOrderScreen(
         }
     }
     BackHandler {
-        navController.navigate(HomeScreenRoute){
+        navController.navigate(HomeScreenRoute) {
             navController.graph.startDestinationRoute?.let { homeScreen ->
                 popUpTo(homeScreen) {
-                    inclusive = true
+                    saveState = true
                 }
                 launchSingleTop = true
             }
