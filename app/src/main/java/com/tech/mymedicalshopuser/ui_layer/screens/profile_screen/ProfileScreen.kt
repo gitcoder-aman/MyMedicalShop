@@ -1,5 +1,7 @@
 package com.tech.mymedicalshopuser.ui_layer.screens.profile_screen
 
+import android.content.Intent
+import android.net.Uri
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
@@ -267,7 +269,10 @@ fun ProfileScreen(
                             fontSize = 14.sp,
                             fontWeight = FontWeight.Light,
                             fontFamily = FontFamily(Font(R.font.roboto_regular))
-                        )
+                        ), modifier = Modifier.clickable {
+                            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://www.linkedin.com/in/aman-kumar-4aaa631b5/"))
+                            context.startActivity(intent)
+                        }
                     )
                 }
                 Spacer(modifier = Modifier.height(45.dp))

@@ -95,7 +95,16 @@ class MedicalRepositoryImpl @Inject constructor(
                     userPinCode = order.user_pinCode,
                     userMobile = order.user_mobile,
                     userEmail = order.user_email,
-                    productImageId = order.product_image_id
+                    productImageId = order.product_image_id,
+                    orderStatus = order.order_status,
+                    orderCancelStatus = order.order_cancel_status,
+                    userStreet = order.user_street,
+                    userCity = order.user_city,
+                    userState = order.user_state,
+                    discountPrice = order.discount_price,
+                    shippedDate = order.shipped_date,
+                    outOfDeliveryDate = order.out_of_delivery_date,
+                    deliveredDate = order.delivered_date
                 )
                 emit(MedicalResponseState.Success(response))
             }

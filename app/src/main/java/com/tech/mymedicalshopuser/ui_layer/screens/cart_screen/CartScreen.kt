@@ -328,7 +328,7 @@ fun TextRow(priceName: String, price: String) {
             )
         )
         Text(
-            text = stringResource(R.string.rs, price), style = TextStyle(
+            text = stringResource(R.string.cart_rs, price), style = TextStyle(
                 fontSize = 18.sp,
                 fontFamily = FontFamily(Font(R.font.roboto_bold)),
                 color = GreenColor

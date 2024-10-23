@@ -63,6 +63,15 @@ interface ApiServices {
         @Field("user_pincode") userPinCode : String,
         @Field("user_mobile") userMobile : String,
         @Field("user_email") userEmail : String,
+        @Field("order_status") orderStatus : String,
+        @Field("order_cancel_status") orderCancelStatus : String,
+        @Field("user_street") userStreet : String,
+        @Field("user_city") userCity : String,
+        @Field("user_state") userState : String,
+        @Field("discount_price") discountPrice : String,
+        @Field("shipped_date") shippedDate : String,
+        @Field("out_of_delivery_date") outOfDeliveryDate : String,
+        @Field("delivered_date") deliveredDate : String,
     ) : Response<ResponseStatus>
 
     @FormUrlEncoded

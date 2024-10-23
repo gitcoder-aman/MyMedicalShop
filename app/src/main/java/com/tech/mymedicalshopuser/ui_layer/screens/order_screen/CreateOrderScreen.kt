@@ -52,7 +52,6 @@ import com.tech.mymedicalshopuser.domain.model.ClientChoiceModelEntity
 import com.tech.mymedicalshopuser.local.entity.AddressEntity
 import com.tech.mymedicalshopuser.local.viewmodel.RoomAddressViewModel
 import com.tech.mymedicalshopuser.local.viewmodel.RoomCartViewModel
-import com.tech.mymedicalshopuser.state.screen_state.AddAddressScreenState
 import com.tech.mymedicalshopuser.ui.theme.GreenColor
 import com.tech.mymedicalshopuser.ui.theme.LightGreenColor
 import com.tech.mymedicalshopuser.ui_layer.navigation.AddressScreenRoute
@@ -62,6 +61,7 @@ import com.tech.mymedicalshopuser.ui_layer.screens.order_screen.component.OrderI
 import com.tech.mymedicalshopuser.ui_layer.screens.order_screen.component.ShippingAddressItemView
 import com.tech.mymedicalshopuser.utils.PreferenceManager
 import com.tech.mymedicalshopuser.utils.calculateDeliveryCharge
+import com.tech.mymedicalshopuser.utils.calculateDiscount
 import com.tech.mymedicalshopuser.utils.calculateTaxCharge
 import com.tech.mymedicalshopuser.utils.totalPriceCalculate
 import com.tech.mymedicalshopuser.viewmodel.OrderViewmodel
@@ -211,7 +211,7 @@ fun CreateOrderScreen(
 
                     Text(
                         text = stringResource(
-                            R.string.rs,
+                            R.string.cart_rs,
                             totalPriceCalculate(subTotalPrice)
                         ),
                         style = MaterialTheme.typography.titleLarge,
@@ -228,6 +228,7 @@ fun CreateOrderScreen(
                         val orderListReady = createOrderOneByOne(
                             addressList[selectedAddressIndex],
                             cartList,
+                            subTotalPrice,
                             preferenceManager
                         )
                         orderViewmodel.createOrder(orderListReady)
@@ -262,6 +263,7 @@ fun CreateOrderScreen(
 fun createOrderOneByOne(
     address: AddressEntity,
     cartList: List<ClientChoiceModelEntity>,
+    subTotalPrice: Float,
     preferenceManager: PreferenceManager
 ): MutableList<MedicalOrderResponseItem> {
     val orderList = mutableListOf<MedicalOrderResponseItem>()
@@ -284,7 +286,16 @@ fun createOrderOneByOne(
             user_email = preferenceManager.getLoginEmailId()!!,
             user_mobile = address.phoneNo,
             user_pinCode = address.pinCode,
-            product_image_id = productItem.product_image_id
+            product_image_id = productItem.product_image_id,
+            order_status = "1",  //for delivery step tracking manage
+            order_cancel_status = "False",
+            user_street = address.street,
+            user_city = address.city,
+            user_state = address.state,
+            discount_price = calculateDiscount(subTotalPrice = subTotalPrice).toString(),
+            shipped_date = "null",
+            out_of_delivery_date = "null",
+            delivered_date = "null"
         )
 
         orderList.add(orderItem)

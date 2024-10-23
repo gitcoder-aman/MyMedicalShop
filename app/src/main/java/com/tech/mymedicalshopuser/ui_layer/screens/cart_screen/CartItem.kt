@@ -1,6 +1,5 @@
 package com.tech.mymedicalshopuser.ui_layer.screens.cart_screen
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -23,7 +22,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
@@ -31,11 +29,10 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.compose.AsyncImage
 import com.tech.mymedicalshopuser.R
 import com.tech.mymedicalshopuser.domain.model.ClientChoiceModelEntity
 import com.tech.mymedicalshopuser.ui.theme.GreenColor
-import com.tech.mymedicalshopuser.utils.GET_IMG_URL
+import com.tech.mymedicalshopuser.ui_layer.component.AsyncImageComponent
 
 @Composable
 fun CartItem(
@@ -64,9 +61,10 @@ fun CartItem(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
         ) {
-            AsyncImage(
-                model = GET_IMG_URL +productItem.product_image_id,
-                contentDescription = null, contentScale = ContentScale.FillWidth,
+            AsyncImageComponent(
+                imageId = productItem.product_image_id,
+                imageSize = 100.dp,
+                shape = RoundedCornerShape(16.dp),
                 modifier = Modifier
                     .weight(0.33f)
                     .padding(5.dp)

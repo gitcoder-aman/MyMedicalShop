@@ -24,12 +24,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.tech.mymedicalshopuser.R
+import com.tech.mymedicalshopuser.ui_layer.component.AsyncImageComponent
 import com.tech.mymedicalshopuser.utils.GET_IMG_URL
 
 @Composable
@@ -42,9 +44,11 @@ fun ProductThumbnail(
         modifier = Modifier
             .fillMaxSize()
     ) {
-        AsyncImage(
-            model = GET_IMG_URL+productImageId,
-            contentDescription = null, contentScale = ContentScale.Crop,
+        AsyncImageComponent(
+            imageId = productImageId,
+            imageSize = 100.dp,
+            padding = 8.dp,
+            shape = RectangleShape,
             modifier = Modifier
                 .fillMaxWidth()
                 .height(300.dp)

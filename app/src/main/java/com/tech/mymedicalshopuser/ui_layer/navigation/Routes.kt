@@ -33,6 +33,12 @@ object CompletedOrderScreenRoute
 object MyAccountScreenRoute
 
 @Serializable
+data class OrderDetailScreenRoute(
+    val orderData : String,
+    val orderList : String
+)
+
+@Serializable
 data class CreateOrderScreenRoute(
     val cartList : String,
     val subTotalPrice : Float

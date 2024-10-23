@@ -8,6 +8,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
+import com.tech.mymedicalshopuser.data.response.order.MedicalOrderResponseItem
 import com.tech.mymedicalshopuser.domain.model.ClientChoiceModelEntity
 import com.tech.mymedicalshopuser.local.viewmodel.RoomAddressViewModel
 import com.tech.mymedicalshopuser.local.viewmodel.RoomCartViewModel
@@ -22,6 +23,7 @@ import com.tech.mymedicalshopuser.ui_layer.screens.order_screen.AddressScreen
 import com.tech.mymedicalshopuser.ui_layer.screens.order_screen.AllOrderScreen
 import com.tech.mymedicalshopuser.ui_layer.screens.order_screen.CompletedOrderScreen
 import com.tech.mymedicalshopuser.ui_layer.screens.order_screen.CreateOrderScreen
+import com.tech.mymedicalshopuser.ui_layer.screens.order_screen.OrderDetailScreen
 import com.tech.mymedicalshopuser.ui_layer.screens.product_detail.ProductDetailScreen
 import com.tech.mymedicalshopuser.ui_layer.screens.profile_screen.MyAccountScreen
 import com.tech.mymedicalshopuser.utils.PreferenceManager
@@ -84,6 +86,16 @@ fun AppNavigation(navController: NavHostController) {
         }
         composable<MyAccountScreenRoute> {
             MyAccountScreen(navController, mainViewmodel, preferenceManager)
+        }
+        composable<OrderDetailScreenRoute> {backStackEntry->
+            val jsonFormat = Json { ignoreUnknownKeys = true }
+
+            val orderListJson = backStackEntry.toRoute<OrderDetailScreenRoute>().orderList
+            val orderList = orderListJson.let { jsonFormat.decodeFromString<List<MedicalOrderResponseItem>>(it) }
+            val orderDataInJson = backStackEntry.toRoute<OrderDetailScreenRoute>().orderData
+            val orderData = orderDataInJson.let { jsonFormat.decodeFromString<MedicalOrderResponseItem>(it) }
+
+            OrderDetailScreen(orderData,orderList,navController)
         }
         composable<CreateOrderScreenRoute> { backStackEntry ->
             val orderListInJson = backStackEntry.toRoute<CreateOrderScreenRoute>().cartList

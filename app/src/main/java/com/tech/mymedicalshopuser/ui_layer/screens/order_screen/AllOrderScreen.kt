@@ -1,16 +1,20 @@
 package com.tech.mymedicalshopuser.ui_layer.screens.order_screen
 
 import android.util.Log
+import android.widget.Space
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.Divider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -30,11 +34,16 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.tech.mymedicalshopuser.R
 import com.tech.mymedicalshopuser.data.response.order.MedicalOrderResponseItem
+import com.tech.mymedicalshopuser.ui.theme.GreenColor
+import com.tech.mymedicalshopuser.ui.theme.LightGreenColor
 import com.tech.mymedicalshopuser.ui_layer.navigation.HomeScreenRoute
+import com.tech.mymedicalshopuser.ui_layer.navigation.OrderDetailScreenRoute
 import com.tech.mymedicalshopuser.ui_layer.navigation.ProfileScreenRoute
 import com.tech.mymedicalshopuser.ui_layer.screens.order_screen.component.OrderCardView
 import com.tech.mymedicalshopuser.utils.PreferenceManager
 import com.tech.mymedicalshopuser.viewmodel.OrderViewmodel
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
 @Composable
 fun AllOrderScreen(
@@ -110,16 +119,16 @@ fun AllOrderScreen(
 
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Top
+            verticalArrangement = Arrangement.Top,
+            modifier = Modifier.padding(4.dp)
         ) {
-            Text(
-                text = "Your Orders", style = TextStyle(
-                    color = Color.Black,
-                    fontSize = 30.sp,
-                    fontWeight = FontWeight.Medium,
-                    fontFamily = FontFamily(Font(R.font.roboto_medium))
-                )
-            )
+            Spacer(Modifier.height(8.dp))
+            TopAppBar("Your Orders") {
+                navController.navigateUp()
+            }
+            Spacer(Modifier.height(8.dp))
+            Divider(color = GreenColor, thickness = 1.dp)
+            Spacer(Modifier.height(16.dp))
             LazyColumn(
                 modifier = Modifier
                     .padding(bottom = 16.dp)
@@ -128,8 +137,19 @@ fun AllOrderScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Top
             ) {
-                items(getAllUserOrderList) { orderData ->
-                    OrderCardView(orderData)
+                items(getAllUserOrderList.reversed()) { orderData ->
+                    OrderCardView(orderData){
+                        val jsonFormat = Json { ignoreUnknownKeys = true }   //for ignore all integer value
+                        val orderDateInJson = jsonFormat.encodeToString(orderData)
+                        val orderListJson = jsonFormat.encodeToString(getAllUserOrderList.toList())
+                        navController.navigate(OrderDetailScreenRoute(
+                            orderData = orderDateInJson,
+                            orderList = orderListJson
+                        ))
+                    }
+                    Spacer(Modifier.height(4.dp))
+                    Divider(color = Color.Gray, thickness = 0.5.dp)
+                    Spacer(Modifier.height(4.dp))
                 }
             }
         }

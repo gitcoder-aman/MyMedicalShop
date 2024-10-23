@@ -18,17 +18,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.compose.AsyncImage
 import com.tech.mymedicalshopuser.R
 import com.tech.mymedicalshopuser.domain.model.ClientChoiceModelEntity
 import com.tech.mymedicalshopuser.ui.theme.LightGreenColor
-import com.tech.mymedicalshopuser.utils.GET_IMG_URL
+import com.tech.mymedicalshopuser.ui_layer.component.AsyncImageComponent
 
 @Composable
 fun OrderItemView(
@@ -50,9 +49,11 @@ fun OrderItemView(
             verticalAlignment = Alignment.CenterVertically,
         ) {
 
-            AsyncImage(
-                model = GET_IMG_URL+cart.product_image_id,
-                contentDescription = null, contentScale = ContentScale.Fit,
+            AsyncImageComponent(
+                imageId = cart.product_image_id,
+                imageSize = 100.dp,
+                padding = 8.dp,
+                shape = RectangleShape,
                 modifier = Modifier
                     .weight(1f)
                     .size(80.dp)
@@ -70,7 +71,7 @@ fun OrderItemView(
                     fontFamily = FontFamily(Font(R.font.roboto_medium))
                 )
                 Text(
-                    text = stringResource(R.string.rs,cart.product_price),
+                    text = stringResource(R.string.cart_rs,cart.product_price),
                     style = MaterialTheme.typography.titleMedium,
                     color = Color.Black,
                     fontSize = 14.sp,

@@ -1,5 +1,8 @@
 package com.tech.mymedicalshopuser.data.response.order
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class MedicalOrderResponseItem(
     val delivery_charge: Int,
     val id: Int = 0,
@@ -21,4 +24,13 @@ data class MedicalOrderResponseItem(
     val user_pinCode: String,
     val user_mobile: String,
     val user_email: String,
+    val order_status: String,
+    val order_cancel_status: String,
+    val user_street: String,
+    val user_city: String,
+    val user_state: String,
+    val discount_price: String,
+    val shipped_date: String,
+    val out_of_delivery_date: String,
+    val delivered_date: String,
 )
