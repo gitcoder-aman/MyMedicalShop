@@ -8,7 +8,9 @@ import com.tech.mymedicalshopuser.data.response.response_status.ResponseStatus
 import com.tech.mymedicalshopuser.data.response.user.GetAllUsersResponseItem
 import com.tech.mymedicalshopuser.domain.repository.MedicalRepository
 import com.tech.mymedicalshopuser.state.MedicalResponseState
+import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.flow
 import retrofit2.Response
 import javax.inject.Inject

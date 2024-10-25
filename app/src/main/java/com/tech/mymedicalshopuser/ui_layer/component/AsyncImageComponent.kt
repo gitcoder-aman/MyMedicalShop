@@ -1,7 +1,9 @@
 package com.tech.mymedicalshopuser.ui_layer.component
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -14,19 +16,23 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.ModifierInfo
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.SubcomposeAsyncImage
+import com.tech.mymedicalshopuser.R
 import com.tech.mymedicalshopuser.ui.theme.GreenColor
+import com.tech.mymedicalshopuser.ui_layer.shimmer.ShimmerEffect
 import com.tech.mymedicalshopuser.utils.GET_IMG_URL
 
 @Composable
 fun AsyncImageComponent(
-     imageId : String,
-     imageSize : Dp,
-     padding : Dp = 0.dp,
-     shape : Shape,
-     modifier : Modifier = Modifier
+    imageId: String,
+    imageSize: Dp,
+    padding: Dp = 0.dp,
+    shape: Shape,
+    modifier: Modifier = Modifier
 ) {
     SubcomposeAsyncImage(
         model = GET_IMG_URL + imageId, modifier = modifier
@@ -43,11 +49,15 @@ fun AsyncImageComponent(
                     .background(Color.LightGray) // Placeholder color
                     .align(Alignment.Center) // Centering the content
             ) {
-                CircularProgressIndicator( // Loading indicator
-                    modifier = Modifier.align(Alignment.Center),
-                    color = GreenColor
-                )
+                ShimmerEffect(modifier = Modifier.fillMaxSize())
             }
+        },
+        error = {
+            Image(
+                painter = painterResource(R.drawable.ic_launcher_foreground),
+                contentDescription = null,
+                modifier = Modifier.size(imageSize)
+            )
         },
         contentDescription = null
     )

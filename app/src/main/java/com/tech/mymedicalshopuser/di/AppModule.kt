@@ -17,6 +17,7 @@ import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
 @Module
@@ -25,17 +26,21 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun provideMedicalApi() :ApiServices{
+    fun provideMedicalApi(): ApiServices {
         return Retrofit.Builder()
             .baseUrl(BASE_URL)
-            .client(OkHttpClient.Builder().build())
+            .client(
+                OkHttpClient.Builder().callTimeout(30, TimeUnit.SECONDS) // Set a timeout duration
+                    .build()
+            )
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(ApiServices::class.java)
     }
+
     @Provides
     @Singleton
-    fun provideMedicalRepository(apiServices: ApiServices) : MedicalRepository{
+    fun provideMedicalRepository(apiServices: ApiServices): MedicalRepository {
         return MedicalRepositoryImpl(apiServices)
     }
 
@@ -60,9 +65,10 @@ class AppModule {
     fun provideCartDao(database: AppDatabase): CartDao {
         return database.cartDao()
     }
+
     @Provides
     @Singleton
-    fun provideAddressDao(database: AppDatabase) : AddressDao{
+    fun provideAddressDao(database: AppDatabase): AddressDao {
         return database.addressDao()
     }
 

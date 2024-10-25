@@ -1,6 +1,7 @@
 package com.tech.mymedicalshopuser.ui_layer.component
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -20,7 +21,7 @@ fun TextFieldComponent(
     value: String,
     onValueChange: (String) -> Unit,
     placeholder: String,
-    leadingIcon: Int
+    leadingIcon: Int,
 ) {
 
     OutlinedTextField(
@@ -49,7 +50,6 @@ fun TextFieldComponent(
             unfocusedLabelColor = Color.LightGray,
             cursorColor = GreenColor
         )
-
     )
 
 }
