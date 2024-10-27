@@ -1,7 +1,6 @@
 package com.tech.mymedicalshopuser.ui_layer.screens.search
 
 import android.util.Log
-import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -26,7 +25,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -58,11 +56,9 @@ fun SearchScreen(navController: NavHostController, profileViewmodel: ProfileView
     var selectedItem by remember {
         mutableIntStateOf(1)
     }
-    var searchText by remember {
-        mutableStateOf("")
-    }
     //collect all product list
     val getAllProductState = profileViewmodel.getAllProducts.collectAsState()
+    val searchTextState by profileViewmodel.searchTextFieldState.collectAsState()
     val getAllProductList: List<ProductModelItem>
 
     when {
@@ -76,9 +72,12 @@ fun SearchScreen(navController: NavHostController, profileViewmodel: ProfileView
 
             val filterProductList = getAllProductList.filter {
                 it.product_name.lowercase()
-                    .contains(searchText.lowercase()) || it.product_category.lowercase()
-                    .contains(searchText.lowercase())
+                    .contains(searchTextState.searchTextValue.value.lowercase()) || it.product_category.lowercase()
+                    .contains(searchTextState.searchTextValue.value.lowercase())
+            }.filter {
+                it.product_stock > 0
             }
+
 
             Box(
                 modifier = Modifier
@@ -95,10 +94,10 @@ fun SearchScreen(navController: NavHostController, profileViewmodel: ProfileView
                     verticalArrangement = Arrangement.Top
                 ) {
                     SearchTopBar(
-                        searchText = searchText,
                         onValueChange = {
-                            searchText = it
-                        }
+                            searchTextState.searchTextValue.value = it
+                        },
+                        searchText = searchTextState.searchTextValue.value
                     )
                     Spacer(Modifier.height(8.dp))
 
@@ -193,8 +192,8 @@ fun SearchScreen(navController: NavHostController, profileViewmodel: ProfileView
 
 @Composable
 fun SearchTopBar(
-    searchText: String,
-    onValueChange: (String) -> Unit
+    onValueChange: (String) -> Unit,
+    searchText: String
 ) {
 
     Box(

@@ -8,10 +8,10 @@ import com.tech.mymedicalshopuser.data.response.response_status.ResponseStatus
 import com.tech.mymedicalshopuser.data.response.user.GetAllUsersResponseItem
 import com.tech.mymedicalshopuser.domain.repository.MedicalRepository
 import com.tech.mymedicalshopuser.state.MedicalResponseState
-import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.flow
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Response
 import javax.inject.Inject
 
@@ -129,13 +129,14 @@ class MedicalRepositoryImpl @Inject constructor(
     }
 
     override suspend fun updateUserData(
-        userId : String,
-        userName: String,
-        userEmail: String,
-        userPhone: String,
-        pinCode: String,
-        address: String,
-        password: String
+        userId : RequestBody,
+        userName: RequestBody,
+        userEmail: RequestBody,
+        userPhone: RequestBody,
+        pinCode: RequestBody,
+        address: RequestBody,
+        password: RequestBody,
+        userImage : MultipartBody.Part?
     ): Flow<MedicalResponseState<Response<ResponseStatus>>> = flow{
         emit(MedicalResponseState.Loading)
         try {
@@ -146,7 +147,8 @@ class MedicalRepositoryImpl @Inject constructor(
                 phone_number = userPhone,
                 pinCode = pinCode,
                 address = address,
-                password = password
+                password = password,
+                pic = userImage!!
             )
             emit(
                 MedicalResponseState.Success(response)

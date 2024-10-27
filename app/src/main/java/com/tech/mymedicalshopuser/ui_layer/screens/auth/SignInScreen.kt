@@ -45,6 +45,7 @@ import com.tech.mymedicalshopuser.ui_layer.navigation.VerificationScreenRoute
 import com.tech.mymedicalshopuser.utils.ISOK
 import com.tech.mymedicalshopuser.utils.PreferenceManager
 import com.tech.mymedicalshopuser.viewmodel.MedicalAuthViewmodel
+import kotlin.math.log
 
 @Composable
 fun SignInScreen(
@@ -100,7 +101,7 @@ fun SignInScreen(
         }
 
         loginResponseState.error != null -> {
-            val response = (loginResponseState as MedicalResponseState.Error).message
+            val response = loginResponseState.error.toString()
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 Text(text = response)
             }

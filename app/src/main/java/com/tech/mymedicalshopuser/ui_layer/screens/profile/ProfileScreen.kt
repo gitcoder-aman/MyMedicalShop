@@ -40,6 +40,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -48,12 +49,15 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.net.toUri
 import androidx.navigation.NavController
+import coil.compose.rememberAsyncImagePainter
 import com.tech.mymedicalshopuser.R
 import com.tech.mymedicalshopuser.domain.model.ClientChoiceModelEntity
 import com.tech.mymedicalshopuser.ui.theme.GreenColor
 import com.tech.mymedicalshopuser.ui.theme.WhiteGreyColor
 import com.tech.mymedicalshopuser.ui_layer.bottomNavigation.NavigationView
+import com.tech.mymedicalshopuser.ui_layer.component.AsyncImageComponent
 import com.tech.mymedicalshopuser.ui_layer.navigation.HomeScreenRoute
 import com.tech.mymedicalshopuser.ui_layer.navigation.MyAccountScreenRoute
 import com.tech.mymedicalshopuser.ui_layer.navigation.AllOrderScreenRoute
@@ -61,6 +65,7 @@ import com.tech.mymedicalshopuser.ui_layer.navigation.CreateOrderScreenRoute
 import com.tech.mymedicalshopuser.ui_layer.navigation.ProfileScreenRoute
 import com.tech.mymedicalshopuser.ui_layer.navigation.SignInRoute
 import com.tech.mymedicalshopuser.ui_layer.screens.cart.CartTopBar
+import com.tech.mymedicalshopuser.utils.GET_IMG_URL
 import com.tech.mymedicalshopuser.utils.PreferenceManager
 import com.tech.mymedicalshopuser.viewmodel.ProfileViewmodel
 import kotlinx.serialization.encodeToString
@@ -101,6 +106,7 @@ fun ProfileScreen(
             profileScreenStateUserData.address.value = getSpecificUser.data!![0].address
             profileScreenStateUserData.dateOfCreationAccount.value =
                 getSpecificUser.data!![0].date_of_account_creation
+            profileScreenStateUserData.userImageId.value = getSpecificUser.data!![0].user_image_id
         }
 
         getSpecificUser.error != null -> {
@@ -129,9 +135,15 @@ fun ProfileScreen(
                     ).show()
                 }
             }
+            Log.d(
+                "@Acc",
+                "ProfileScreen updated data: ${updatedProfileResponseState.data!!.message}"
+            )
+
         }
 
         updatedProfileResponseState.error != null -> {
+            Log.d("@Acc", "ProfileScreen updated Error: ${updatedProfileResponseState.error}")
             Toast.makeText(context, updatedProfileResponseState.error, Toast.LENGTH_SHORT).show()
         }
     }
@@ -172,12 +184,13 @@ fun ProfileScreen(
                 Spacer(modifier = Modifier.height(8.dp))
                 Column(
                     modifier = Modifier
-                        .fillMaxSize().background(Color.White)
+                        .fillMaxSize()
+                        .background(Color.White)
                         .padding(8.dp)
                 ) {
                     PersonalDetail(
                         userName = profileScreenStateUserData.userName.value,
-                        userImage = ""
+                        userImageId = profileScreenStateUserData.userImageId.value
                     ) {
                         navController.navigate(MyAccountScreenRoute)
                     }
@@ -298,7 +311,7 @@ fun ProfileScreen(
 @Composable
 fun PersonalDetail(
     userName: String,
-    userImage: String,
+    userImageId: String,
     onClick: () -> Unit
 ) {
     Row(
@@ -319,18 +332,17 @@ fun PersonalDetail(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Image(
-            painter = painterResource(R.drawable.medicine),
-            contentDescription = null,
+        AsyncImageComponent(
+            imageId = userImageId,
             modifier = Modifier
-                .size(50.dp)
                 .shadow(
                     elevation = 10.dp,
                     spotColor = Color.Black,
                     ambientColor = Color.Black,
                     shape = CircleShape
-                )
-                .background(Color.Black)
+                ),
+            imageSize = 50.dp,
+            shape = CircleShape
         )
         Spacer(modifier = Modifier.width(16.dp))
         Column(

@@ -2,7 +2,6 @@ package com.tech.mymedicalshopuser.ui_layer.screens.home
 
 import android.app.Activity
 import android.util.Log
-import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -14,7 +13,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -44,11 +42,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.airbnb.lottie.compose.LottieAnimation
-import com.airbnb.lottie.compose.LottieCompositionSpec
-import com.airbnb.lottie.compose.LottieConstants
-import com.airbnb.lottie.compose.animateLottieCompositionAsState
-import com.airbnb.lottie.compose.rememberLottieComposition
 import com.tech.mymedicalshopuser.R
 import com.tech.mymedicalshopuser.data.response.product.ProductModelItem
 import com.tech.mymedicalshopuser.domain.model.categoryList
@@ -60,10 +53,8 @@ import com.tech.mymedicalshopuser.ui_layer.component.TextFieldComponent
 import com.tech.mymedicalshopuser.ui_layer.navigation.ProductDetailScreenRoute
 import com.tech.mymedicalshopuser.ui_layer.screens.home.component.CategoryItem
 import com.tech.mymedicalshopuser.ui_layer.screens.home.component.ClientItemView
-import com.tech.mymedicalshopuser.ui_layer.shimmer.ShimmerEffect
 import com.tech.mymedicalshopuser.ui_layer.shimmer.ShimmerEffectForHome
 import com.tech.mymedicalshopuser.utils.PreferenceManager
-import com.tech.mymedicalshopuser.utils.rememberNetworkStatus
 import com.tech.mymedicalshopuser.viewmodel.ProfileViewmodel
 
 @Composable
@@ -89,29 +80,6 @@ fun HomeScreen(
         mutableStateOf("User")
     }
 
-    val isConnected = rememberNetworkStatus(context)
-//
-//    when {
-//        !isConnected -> {
-//            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-//                // Show your Lottie animation when there is no internet
-//                val noInternetLottieComposition = rememberLottieComposition(
-//                    spec = LottieCompositionSpec.RawRes(R.raw.check_internet) // Replace with your Lottie file
-//                )
-//                val noInternetProgress = animateLottieCompositionAsState(
-//                    composition = noInternetLottieComposition.value,
-//                    iterations = LottieConstants.IterateForever,
-//                    isPlaying = true
-//                )
-//                LottieAnimation(
-//                    composition = noInternetLottieComposition.value,
-//                    progress = noInternetProgress.value,
-//                    modifier = Modifier.size(200.dp) // Adjust size as needed
-//                )
-//                Text(text = "No Internet Connection", color = Color.Red) // Add an error message
-//            }
-//        }
-//    }
     BackHandler {
         (context as? Activity)?.finish()
     }
@@ -164,6 +132,8 @@ fun HomeScreen(
                 it.product_name.lowercase()
                     .contains(searchText.lowercase()) || it.product_category.lowercase()
                     .contains(searchText.lowercase())
+            }.filter {
+                it.product_stock > 0
             }
             Box(
                 modifier = Modifier.fillMaxSize(),

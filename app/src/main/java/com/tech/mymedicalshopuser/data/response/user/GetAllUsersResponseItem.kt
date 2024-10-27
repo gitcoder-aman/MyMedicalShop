@@ -12,5 +12,6 @@ data class GetAllUsersResponseItem(
     val password: String,
     val phone_number: String,
     val pinCode: String,
-    val user_id: String
+    val user_id: String,
+    val user_image_id : String
 )

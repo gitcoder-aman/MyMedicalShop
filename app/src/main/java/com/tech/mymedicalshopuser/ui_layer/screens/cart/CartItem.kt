@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.sp
 import com.tech.mymedicalshopuser.R
 import com.tech.mymedicalshopuser.domain.model.ClientChoiceModelEntity
 import com.tech.mymedicalshopuser.ui.theme.GreenColor
+import com.tech.mymedicalshopuser.ui_layer.animation.AnimatedContentComponent
 import com.tech.mymedicalshopuser.ui_layer.component.AsyncImageComponent
 
 @Composable
@@ -120,14 +121,19 @@ fun CartItem(
                                 decreaseItem()
                             }, tint = Color.Unspecified
                     )
-                    Text(
-                        text = count.toString(), style = TextStyle(
-                            fontSize = 22.sp,
-                            fontWeight = FontWeight.W200,
-                            fontFamily = FontFamily(Font(R.font.roboto_regular)),
-                            color = GreenColor,
-                        ), maxLines = 1
-                    )
+
+                    AnimatedContentComponent(
+                        targetState = count.toString(),
+                    ) { targetCount ->
+                        Text(
+                            text = targetCount, style = TextStyle(
+                                fontSize = 22.sp,
+                                fontWeight = FontWeight.W200,
+                                fontFamily = FontFamily(Font(R.font.roboto_regular)),
+                                color = GreenColor,
+                            ), maxLines = 1
+                        )
+                    }
                     Icon(
                         painter = painterResource(id = R.drawable.icon_plus),
                         contentDescription = "plus-button",
@@ -140,8 +146,6 @@ fun CartItem(
                                 increaseItem()
                             }, tint = Color.Unspecified
                     )
-//                        val cartMenu = CartMenu(itemCount = count, itemIndex = itemIndex)
-//                        cartList(cartMenu)
                 }
                 IconButton(
                     onClick = {  //delete functionality data from firebase

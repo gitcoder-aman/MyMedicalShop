@@ -1,6 +1,15 @@
 package com.tech.mymedicalshopuser.ui_layer.navigation
 
 import android.util.Log
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.core.EaseIn
+import androidx.compose.animation.core.EaseOut
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
@@ -93,40 +102,201 @@ fun AppNavigation(navController: NavHostController) {
                 else if (preferenceManager.getLoginUserId() != "" && preferenceManager.getApprovedStatus() == 0)
                     VerificationScreenRoute(preferenceManager.getLoginUserId()!!)
                 else
-                    SignInRoute
+                    SignInRoute,
+                enterTransition = {EnterTransition.None},
+                exitTransition = {ExitTransition.None}
             ) {
 
-                composable<SignInRoute> {
+                composable<SignInRoute>(
+                    enterTransition = {
+                        fadeIn(
+                            animationSpec = tween(
+                                500, easing = LinearEasing
+                            )
+                        )+slideIntoContainer(
+                            animationSpec = tween(500, easing = EaseIn),
+                            towards = AnimatedContentTransitionScope.SlideDirection.Up
+                        )
+                    }
+                ) {
                     SignInScreen(navController, medicalAuthViewmodel)
                 }
-                composable<SignUpRoute> {
+                composable<SignUpRoute>(
+                    enterTransition = {
+                        fadeIn(
+                            animationSpec = tween(
+                                500, easing = LinearEasing
+                            )
+                        )+slideIntoContainer(
+                            animationSpec = tween(500, easing = EaseIn),
+                            towards = AnimatedContentTransitionScope.SlideDirection.Up
+                        )
+                    }
+                ) {
                     SignupScreen(navController)
                 }
-                composable<HomeScreenRoute> {
+                composable<HomeScreenRoute>(
+                    enterTransition ={
+                        fadeIn(
+                            animationSpec = tween(
+                                400, easing = LinearEasing
+                            )
+                        )+slideIntoContainer(
+                            animationSpec = tween(400, easing = EaseIn),
+                            towards = AnimatedContentTransitionScope.SlideDirection.End
+                        )
+                    }
+                ) {
                     HomeScreen(navController, profileViewmodel)
                 }
-                composable<CartScreenRoute> {
+                composable<CartScreenRoute>(
+                    enterTransition ={
+                        fadeIn(
+                            animationSpec = tween(
+                                400, easing = LinearEasing
+                            )
+                        )+slideIntoContainer(
+                            animationSpec = tween(400, easing = EaseIn),
+                            towards = AnimatedContentTransitionScope.SlideDirection.End
+                        )
+                    }
+                ) {
                     CartScreen(navController, roomCartViewmodel)
                 }
-                composable<AllOrderScreenRoute> {
+                composable<AllOrderScreenRoute>(
+                    enterTransition ={
+                        fadeIn(
+                            animationSpec = tween(
+                                400, easing = LinearEasing
+                            )
+                        )+slideIntoContainer(
+                            animationSpec = tween(400, easing = EaseIn),
+                            towards = AnimatedContentTransitionScope.SlideDirection.Start
+                        )
+                    },
+                    exitTransition = {
+                        fadeOut(
+                            animationSpec = tween(
+                                400, easing = LinearEasing
+                            )
+                        )+slideOutOfContainer(
+                            animationSpec = tween(400, easing = EaseOut),
+                            towards = AnimatedContentTransitionScope.SlideDirection.End
+                        )
+                    }
+                ) {
                     AllOrderScreen(navController, orderViewmodel)
                 }
-                composable<ProfileScreenRoute> {
+                composable<ProfileScreenRoute>(
+                    enterTransition ={
+                        fadeIn(
+                            animationSpec = tween(
+                                400, easing = LinearEasing
+                            )
+                        )+slideIntoContainer(
+                            animationSpec = tween(400, easing = EaseIn),
+                            towards = AnimatedContentTransitionScope.SlideDirection.Start
+                        )
+                    }
+                ) {
                     ProfileScreen(navController, profileViewmodel, preferenceManager)
                 }
-                composable<SearchScreenRoute> {
+                composable<SearchScreenRoute>(
+                    enterTransition ={
+                        fadeIn(
+                            animationSpec = tween(
+                                400, easing = LinearEasing
+                            )
+                        )+slideIntoContainer(
+                            animationSpec = tween(400, easing = EaseIn),
+                            towards = AnimatedContentTransitionScope.SlideDirection.Start
+                        )
+                    }
+                ) {
                     SearchScreen(navController,profileViewmodel)
                 }
-                composable<AddressScreenRoute> {
+                composable<AddressScreenRoute>(
+                    enterTransition ={
+                        fadeIn(
+                            animationSpec = tween(
+                                400, easing = LinearEasing
+                            )
+                        )+slideIntoContainer(
+                            animationSpec = tween(400, easing = EaseIn),
+                            towards = AnimatedContentTransitionScope.SlideDirection.Start
+                        )
+                    }, exitTransition = {
+                        fadeOut(
+                            animationSpec = tween(
+                                400, easing = LinearEasing
+                            )
+                        )+slideOutOfContainer(
+                            animationSpec = tween(400, easing = EaseOut),
+                            towards = AnimatedContentTransitionScope.SlideDirection.End
+                        )
+                    }
+                ) {
                     AddressScreen(navController, roomAddressViewmodel)
                 }
-                composable<CompletedOrderScreenRoute> {
+                composable<CompletedOrderScreenRoute>(
+                    enterTransition ={
+                        fadeIn(
+                            animationSpec = tween(
+                                400, easing = LinearEasing
+                            )
+                        )+slideIntoContainer(
+                            animationSpec = tween(400, easing = EaseIn),
+                            towards = AnimatedContentTransitionScope.SlideDirection.Start
+                        )
+                    },
+                ) {
                     CompletedOrderScreen(navController)
                 }
-                composable<MyAccountScreenRoute> {
+                composable<MyAccountScreenRoute>(
+                    enterTransition ={
+                        fadeIn(
+                            animationSpec = tween(
+                                400, easing = LinearEasing
+                            )
+                        )+slideIntoContainer(
+                            animationSpec = tween(400, easing = EaseIn),
+                            towards = AnimatedContentTransitionScope.SlideDirection.Start
+                        )
+                    },
+                    exitTransition = {
+                        fadeOut(
+                            animationSpec = tween(
+                                400, easing = LinearEasing
+                            )
+                        )+slideOutOfContainer(
+                            animationSpec = tween(400, easing = EaseOut),
+                            towards = AnimatedContentTransitionScope.SlideDirection.End
+                        )
+                    }
+                ) {
                     MyAccountScreen(navController, profileViewmodel, preferenceManager)
                 }
-                composable<OrderDetailScreenRoute> {backStackEntry->
+                composable<OrderDetailScreenRoute>(
+                    enterTransition ={
+                        fadeIn(
+                            animationSpec = tween(
+                                400, easing = LinearEasing
+                            )
+                        )+slideIntoContainer(
+                            animationSpec = tween(400, easing = EaseIn),
+                            towards = AnimatedContentTransitionScope.SlideDirection.Start
+                        )
+                    }, exitTransition = {
+                        fadeOut(
+                            animationSpec = tween(
+                                400, easing = LinearEasing
+                            )
+                        )+slideOutOfContainer(
+                            animationSpec = tween(400, easing = EaseOut),
+                            towards = AnimatedContentTransitionScope.SlideDirection.End
+                        )
+                    }
+                ) {backStackEntry->
                     val jsonFormat = Json { ignoreUnknownKeys = true }
 
                     val orderListJson = backStackEntry.toRoute<OrderDetailScreenRoute>().orderList
@@ -136,7 +306,28 @@ fun AppNavigation(navController: NavHostController) {
 
                     OrderDetailScreen(orderData,orderList,navController)
                 }
-                composable<CreateOrderScreenRoute> { backStackEntry ->
+                composable<CreateOrderScreenRoute>(
+                    enterTransition ={
+                        fadeIn(
+                            animationSpec = tween(
+                                400, easing = LinearEasing
+                            )
+                        )+slideIntoContainer(
+                            animationSpec = tween(400, easing = EaseIn),
+                            towards = AnimatedContentTransitionScope.SlideDirection.Start
+                        )
+                    },
+                    exitTransition = {
+                        fadeOut(
+                            animationSpec = tween(
+                                400, easing = LinearEasing
+                            )
+                        )+slideOutOfContainer(
+                            animationSpec = tween(400, easing = EaseOut),
+                            towards = AnimatedContentTransitionScope.SlideDirection.End
+                        )
+                    }
+                ) { backStackEntry ->
                     val orderListInJson = backStackEntry.toRoute<CreateOrderScreenRoute>().cartList
                     val cartList =
                         orderListInJson.let { Json.decodeFromString<List<ClientChoiceModelEntity>>(it) }
@@ -150,7 +341,18 @@ fun AppNavigation(navController: NavHostController) {
                         navController
                     )
                 }
-                composable<ProductDetailScreenRoute> { navBackStackEntry ->
+                composable<ProductDetailScreenRoute>(
+                    enterTransition ={
+                        fadeIn(
+                            animationSpec = tween(
+                                400, easing = LinearEasing
+                            )
+                        )+slideIntoContainer(
+                            animationSpec = tween(400, easing = EaseIn),
+                            towards = AnimatedContentTransitionScope.SlideDirection.Up
+                        )
+                    }
+                ) { navBackStackEntry ->
                     val productName = navBackStackEntry.toRoute<ProductDetailScreenRoute>().productName
                     val productId = navBackStackEntry.toRoute<ProductDetailScreenRoute>().productId
                     val productImageId =
@@ -187,7 +389,18 @@ fun AppNavigation(navController: NavHostController) {
 
                 }
 
-                composable<VerificationScreenRoute> { navBackStackEntry ->
+                composable<VerificationScreenRoute>(
+                    enterTransition = {
+                        fadeIn(
+                            animationSpec = tween(
+                                500, easing = LinearEasing
+                            )
+                        )+slideIntoContainer(
+                            animationSpec = tween(500, easing = EaseIn),
+                            towards = AnimatedContentTransitionScope.SlideDirection.Up
+                        )
+                    }
+                ) { navBackStackEntry ->
                     val userId = navBackStackEntry.toRoute<VerificationScreenRoute>().userId
                     VerificationPendingScreen(navController, userId, profileViewmodel)
 

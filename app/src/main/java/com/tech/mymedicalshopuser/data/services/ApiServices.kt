@@ -5,12 +5,16 @@ import com.tech.mymedicalshopuser.data.response.order.MedicalOrderResponseItem
 import com.tech.mymedicalshopuser.data.response.product.ProductModelItem
 import com.tech.mymedicalshopuser.data.response.user.GetAllUsersResponseItem
 import com.tech.mymedicalshopuser.data.response.response_status.ResponseStatus
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Response
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
+import retrofit2.http.Multipart
 import retrofit2.http.PATCH
 import retrofit2.http.POST
+import retrofit2.http.Part
 import java.util.Date
 
 interface ApiServices {
@@ -80,16 +84,17 @@ interface ApiServices {
         @Field("user_id") userId : String,
     ) : Response<ArrayList<MedicalOrderResponseItem>>
 
-    @FormUrlEncoded
+    @Multipart
     @PATCH("updateUser")
     suspend fun updateUserData(
-        @Field("userId") userId: String,
-        @Field("name") name: String,
-        @Field("password") password: String,
-        @Field("email") email: String,
-        @Field("phone_number") phone_number : String,
-        @Field("pinCode") pinCode: String,
-        @Field("address") address: String,
+        @Part("userId") userId: RequestBody,
+        @Part("name") name: RequestBody,
+        @Part("password") password: RequestBody,
+        @Part("email") email: RequestBody,
+        @Part("phone_number") phone_number: RequestBody,
+        @Part("pinCode") pinCode: RequestBody,
+        @Part("address") address: RequestBody,
+        @Part pic: MultipartBody.Part?,
     ) : Response<ResponseStatus>
 
 }

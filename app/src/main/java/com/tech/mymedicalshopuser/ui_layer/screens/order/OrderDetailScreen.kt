@@ -51,6 +51,20 @@ fun OrderDetailScreen(
     navController: NavHostController
 ) {
 
+    //for current step of order
+//    var currentStep = 1
+//    if(orderData.isApproved == 1){
+//        currentStep +=1
+//    }
+//    if(orderData.shipped_date !="null"){
+//        currentStep +=1
+//    }
+//    if(orderData.out_of_delivery_date != "null"){
+//        currentStep +=1
+//    }
+//    if(orderData.delivered_date != "null"){
+//        currentStep +=1
+//    }
     val scrollSate = rememberScrollState()
 
     Box(
@@ -334,7 +348,7 @@ fun ProductDetailCard(orderData: MedicalOrderResponseItem) {
             VerticalStepper(
                 style = tabVerticalWithLabel(
                     totalSteps = 5,
-                    currentStep = 2,
+                    currentStep = orderData.order_status.toInt(),
                     trailingLabels = listOf(
                         { Text("Pending  ${orderData.order_date.substring(0, 10)}") },
                         {
@@ -348,31 +362,28 @@ fun ProductDetailCard(orderData: MedicalOrderResponseItem) {
                             )
                         },
                         {
-                            if (orderData.shipped_date != "null")
-                                Text(
-                                    "Shipped  ${
-                                        orderData.shipped_date.substring(
-                                            0,
-                                            10
-                                        )
-                                    }"
-                                )
+                            Text(
+                                "Shipped  ${
+                                    if (orderData.shipped_date != "null")
+                                        orderData.shipped_date.substring(0, 10) else ""
+                                }"
+                            )
                         },
                         {
-                            if (orderData.out_of_delivery_date != "null")
-                                Text(
-                                    "Out of Delivery  ${
-                                        orderData.out_of_delivery_date.substring(0, 10)
-                                    }"
-                                )
+                            Text(
+                                "Out of Delivery  ${
+                                    if (orderData.out_of_delivery_date != "null") 
+                                        orderData.out_of_delivery_date.substring(0, 10) else ""
+                                }"
+                            )
                         },
                         {
-                            if (orderData.delivered_date != "null")
-                                Text(
-                                    "Delivered  ${
-                                        orderData.delivered_date.substring(0, 10)
-                                    }"
-                                )
+                            Text(
+                                "Delivered  ${
+                                    if (orderData.delivered_date != "null")
+                                        orderData.delivered_date.substring(0, 10) else ""
+                                }"
+                            )
                         },
                     )
                 ), modifier = Modifier.fillMaxWidth()

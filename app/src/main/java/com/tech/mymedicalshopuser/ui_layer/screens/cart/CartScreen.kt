@@ -1,9 +1,16 @@
 package com.tech.mymedicalshopuser.ui_layer.screens.cart
 
 import android.util.Log
-import android.widget.Space
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.SizeTransform
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -21,12 +28,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Divider
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -38,7 +41,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -50,7 +52,6 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
@@ -62,15 +63,13 @@ import com.airbnb.lottie.compose.rememberLottieComposition
 import com.tech.mymedicalshopuser.R
 import com.tech.mymedicalshopuser.local.viewmodel.RoomCartViewModel
 import com.tech.mymedicalshopuser.ui.theme.GreenColor
-import com.tech.mymedicalshopuser.ui.theme.LightGreenColor
 import com.tech.mymedicalshopuser.ui.theme.WhiteGreyColor
+import com.tech.mymedicalshopuser.ui_layer.animation.AnimatedContentComponent
 import com.tech.mymedicalshopuser.ui_layer.bottomNavigation.NavigationView
-import com.tech.mymedicalshopuser.ui_layer.component.TextFieldComponent
 import com.tech.mymedicalshopuser.ui_layer.navigation.CartScreenRoute
 import com.tech.mymedicalshopuser.ui_layer.navigation.CreateOrderScreenRoute
 import com.tech.mymedicalshopuser.ui_layer.navigation.HomeScreenRoute
 import com.tech.mymedicalshopuser.ui_layer.navigation.ProductDetailScreenRoute
-import com.tech.mymedicalshopuser.ui_layer.screens.order.TopAppBar
 import com.tech.mymedicalshopuser.utils.calculateDeliveryCharge
 import com.tech.mymedicalshopuser.utils.calculateDiscount
 import com.tech.mymedicalshopuser.utils.calculateTaxCharge
@@ -86,9 +85,9 @@ fun CartScreen(
     var selectedItem by remember {
         mutableIntStateOf(2)
     }
-    val context = LocalContext.current
     val cartList by roomCartViewmodel.cartList.collectAsState()
     val subTotalPrice by roomCartViewmodel.subTotalPrice.collectAsState()
+    val context = LocalContext.current
 
     BackHandler {
         navController.navigate(HomeScreenRoute) {
@@ -140,42 +139,49 @@ fun CartScreen(
                     modifier = Modifier
                         .padding(8.dp)
                         .fillMaxWidth()
-                        .height(520.dp)
+                        .height(450.dp)
                 ) {
                     items(cartList) { product ->
-                        CartItem(
-                            count = product.product_count,
-                            productItem = product,
-                            itemOnClick = {
-                                navController.navigate(
-                                    ProductDetailScreenRoute(
-                                        productName = product.product_name,
-                                        productImageId = product.product_image_id,
-                                        productPrice = product.product_price,
-                                        productRating = product.product_rating,
-                                        productStock = product.product_stock,
-                                        productDescription = product.product_description,
-                                        productPower = product.product_power,
-                                        productCategory = product.product_category,
-                                        productExpiryDate = product.product_expiry_date,
-                                        productId = product.product_id
+                            CartItem(
+                                count = product.product_count,
+                                productItem = product,
+                                itemOnClick = {
+                                    navController.navigate(
+                                        ProductDetailScreenRoute(
+                                            productName = product.product_name,
+                                            productImageId = product.product_image_id,
+                                            productPrice = product.product_price,
+                                            productRating = product.product_rating,
+                                            productStock = product.product_stock,
+                                            productDescription = product.product_description,
+                                            productPower = product.product_power,
+                                            productCategory = product.product_category,
+                                            productExpiryDate = product.product_expiry_date,
+                                            productId = product.product_id
+                                        )
                                     )
-                                )
-                            }, onDelete = {
-                                roomCartViewmodel.deleteCartById(product.product_id)
-                            }, increaseItem = {
-                                roomCartViewmodel.updateCartList(
-                                    product.product_id,
-                                    product.product_count + 1
-                                )
-                            }, decreaseItem = {
-                                if (product.product_count > 1)
-                                    roomCartViewmodel.updateCartList(
-                                        product.product_id,
-                                        product.product_count - 1
-                                    )
-                            }
-                        )
+                                }, onDelete = {
+                                    roomCartViewmodel.deleteCartById(product.product_id)
+                                }, increaseItem = {
+                                    Log.d("@stock", "CartScreen: ${product.product_count}")
+                                    Log.d("@stock", "CartScreen: ${product.product_stock}")
+                                    if(product.product_stock > product.product_count){
+                                        roomCartViewmodel.updateCartList(
+                                            product.product_id,
+                                            product.product_count + 1
+                                        )
+                                    }else{
+                                        Toast.makeText(context, "Product Stock Limit Reached ${product.product_stock}", Toast.LENGTH_SHORT).show()
+                                    }
+
+                                }, decreaseItem = {
+                                    if (product.product_count > 1)
+                                        roomCartViewmodel.updateCartList(
+                                            product.product_id,
+                                            product.product_count - 1
+                                        )
+                                }
+                            )
                     }
                 }
             } else {
@@ -243,7 +249,8 @@ fun CartPriceCard(
     ) {
         Column(
             modifier = Modifier
-                .fillMaxWidth().background(WhiteGreyColor)
+                .fillMaxWidth()
+                .background(WhiteGreyColor)
                 .padding(20.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceBetween
@@ -327,20 +334,25 @@ fun TextRow(priceName: String, price: String) {
                 color = Color.Black
             )
         )
-        Text(
-            text = stringResource(R.string.cart_rs, price), style = TextStyle(
-                fontSize = 18.sp,
-                fontFamily = FontFamily(Font(R.font.roboto_bold)),
-                color = GreenColor
+
+        AnimatedContentComponent(
+            targetState = price,
+        ) { targetPrice ->
+            Text(
+                text = stringResource(R.string.cart_rs, targetPrice), style = TextStyle(
+                    fontSize = 18.sp,
+                    fontFamily = FontFamily(Font(R.font.roboto_bold)),
+                    color = GreenColor
+                )
             )
-        )
+        }
     }
 }
 
 @Composable
 fun CartTopBar(
-    headerName : String,
-    isBackButtonShow : Boolean,
+    headerName: String,
+    isBackButtonShow: Boolean,
     onClick: () -> Unit = {}
 ) {
 
@@ -369,17 +381,19 @@ fun CartTopBar(
                 horizontalArrangement = Arrangement.Start,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                if(isBackButtonShow) {
+                if (isBackButtonShow) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
                         contentDescription = null,
                         tint = Color.White,
-                        modifier = Modifier.size(36.dp).clickable(
-                            interactionSource = remember { MutableInteractionSource() },
-                            indication = null
-                        ) {
-                            onClick()
-                        }
+                        modifier = Modifier
+                            .size(36.dp)
+                            .clickable(
+                                interactionSource = remember { MutableInteractionSource() },
+                                indication = null
+                            ) {
+                                onClick()
+                            }
                     )
                     Spacer(Modifier.width(8.dp))
                 }
