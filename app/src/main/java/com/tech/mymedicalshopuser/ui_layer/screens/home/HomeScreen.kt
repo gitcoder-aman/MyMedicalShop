@@ -93,14 +93,16 @@ fun HomeScreen(
 
         getSpecificUser.data != null -> {
             Log.d("@@verify", "HomeScreen: ${getSpecificUser.data}")
-            val isVerifiedAccount = getSpecificUser.data!![0].isApproved
-            val user_Name = getSpecificUser.data!![0].name
-            LaunchedEffect(isVerifiedAccount) {
-                isApproved = isVerifiedAccount
-                userName = user_Name
+            if (getSpecificUser.data!!.isNotEmpty()) {
+                val isVerifiedAccount = getSpecificUser.data!![0].isApproved
+                val name = getSpecificUser.data!![0].name
+                LaunchedEffect(isVerifiedAccount) {
+                    isApproved = isVerifiedAccount
+                    userName = name
 
-                preferenceManager.setApprovedStatus(isVerifiedAccount)
+                    preferenceManager.setApprovedStatus(isVerifiedAccount)
 
+                }
             }
         }
 

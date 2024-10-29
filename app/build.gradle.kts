@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -109,6 +111,7 @@ dependencies {
 
     implementation(libs.androidx.room.ktx)
 
+    //for order tracking step
     implementation(libs.kotstep)
 
 

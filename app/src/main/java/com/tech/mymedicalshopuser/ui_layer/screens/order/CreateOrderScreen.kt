@@ -93,11 +93,13 @@ fun CreateOrderScreen(
         }
 
         createOrderResponseStatus.value.data != null -> {
+            Toast.makeText(context, createOrderResponseStatus.value.data!!.message, Toast.LENGTH_SHORT).show()
             Log.d("@create_order", "OrderScreen: ${createOrderResponseStatus.value.data!!.message}")
             Log.d("@create_order", "OrderScreen: ${createOrderResponseStatus.value.data!!.status}")
         }
 
         createOrderResponseStatus.value.error != null -> {
+            Toast.makeText(context, createOrderResponseStatus.value.error, Toast.LENGTH_SHORT).show()
             Log.d("@create_order", "OrderScreen: ${createOrderResponseStatus.value.error}")
         }
 
@@ -270,6 +272,35 @@ fun createOrderOneByOne(
 ): MutableList<MedicalOrderResponseItem> {
     val orderList = mutableListOf<MedicalOrderResponseItem>()
     for (productItem in cartList) {
+        Log.d("@orderItem", "createOrderOneByOne: name ${productItem.product_name}")
+        Log.d("@orderItem", "createOrderOneByOne: category ${productItem.product_category}")
+        Log.d("@orderItem", "createOrderOneByOne: price ${productItem.product_price}")
+        Log.d("@orderItem", "createOrderOneByOne: productID ${productItem.product_id}")
+        Log.d("@orderItem", "createOrderOneByOne: product_qty ${productItem.product_count}")
+        Log.d("@orderItem", "createOrderOneByOne: user_id ${preferenceManager.getLoginUserId()}")
+        Log.d("@orderItem", "createOrderOneByOne: full Name ${address.fullName}")
+        Log.d("@orderItem", "createOrderOneByOne:date ${java.util.Date().toString()}")
+        Log.d("@orderItem", "createOrderOneByOne: totalPrice ${totalPriceCalculate(productItem.product_price.toFloat())}")
+        Log.d("@orderItem", "createOrderOneByOne:deliveryCharge ${calculateDeliveryCharge(productItem.product_price.toFloat())}")
+        Log.d("@orderItem", "createOrderOneByOne: taxCharge ${calculateTaxCharge(productItem.product_price.toFloat())}")
+        Log.d("@orderItem", "createOrderOneByOne: subtotal${productItem.product_count * productItem.product_price}")
+        Log.d("@orderItem", "createOrderOneByOne: isApproved ${preferenceManager.getApprovedStatus()}")
+        Log.d("@orderItem", "createOrderOneByOne: user_address ${address.address}")
+        Log.d("@orderItem", "createOrderOneByOne: user_email ${preferenceManager.getLoginEmailId()}")
+        Log.d("@orderItem", "createOrderOneByOne: user_mobile ${address.phoneNo}")
+        Log.d("@orderItem", "createOrderOneByOne: user_pinCode ${address.pinCode}")
+        Log.d("@orderItem", "createOrderOneByOne: product_image_id ${productItem.product_image_id}")
+        Log.d("@orderItem", "createOrderOneByOne: order_status ${"1"}")
+        Log.d("@orderItem", "createOrderOneByOne: order_cancel_status ${"False"}")
+        Log.d("@orderItem", "createOrderOneByOne: user_street ${address.street}")
+        Log.d("@orderItem", "createOrderOneByOne: user_city ${address.city}")
+        Log.d("@orderItem", "createOrderOneByOne: user_state ${address.state}")
+        Log.d("@orderItem", "createOrderOneByOne: discount_price ${calculateDiscount(subTotalPrice).toString()}")
+        Log.d("@orderItem", "createOrderOneByOne: shipped_date ${"null"}")
+        Log.d("@orderItem", "createOrderOneByOne: out_of_delivery_date ${"null"}")
+        Log.d("@orderItem", "createOrderOneByOne: delivered_date ${"null"}")
+
+
         val orderItem = MedicalOrderResponseItem(
             product_category = productItem.product_category,
             product_name = productItem.product_name,
@@ -283,7 +314,7 @@ fun createOrderOneByOne(
             delivery_charge = calculateDeliveryCharge(productItem.product_price.toFloat()).toInt(),
             tax_charge = calculateTaxCharge(productItem.product_price.toFloat()).toInt(),//according to gst 18%
             subtotal_price = productItem.product_count * productItem.product_price,
-            isApproved = preferenceManager.getApprovedStatus(),
+            isApproved = 0,
             user_address = address.address,
             user_email = preferenceManager.getLoginEmailId()!!,
             user_mobile = address.phoneNo,

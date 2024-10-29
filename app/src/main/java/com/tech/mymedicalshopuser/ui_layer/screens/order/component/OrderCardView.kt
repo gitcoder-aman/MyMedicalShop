@@ -124,25 +124,3 @@ fun TextView(
         )
     )
 }
-
-@Composable
-fun ButtonView(
-    text: String,
-    color: Color,
-    enabled: Boolean,
-) {
-    Button(
-        onClick = {
-
-        }, modifier = Modifier.fillMaxWidth(),
-        colors = ButtonDefaults.buttonColors(
-            containerColor = color,
-            contentColor = Color.White
-        ), elevation = ButtonDefaults.buttonElevation(1.dp),
-        enabled = enabled
-
-    ) {
-        Text(text = text)
-    }
-
-}

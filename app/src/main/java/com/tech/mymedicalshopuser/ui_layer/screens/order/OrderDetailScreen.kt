@@ -51,20 +51,6 @@ fun OrderDetailScreen(
     navController: NavHostController
 ) {
 
-    //for current step of order
-//    var currentStep = 1
-//    if(orderData.isApproved == 1){
-//        currentStep +=1
-//    }
-//    if(orderData.shipped_date !="null"){
-//        currentStep +=1
-//    }
-//    if(orderData.out_of_delivery_date != "null"){
-//        currentStep +=1
-//    }
-//    if(orderData.delivered_date != "null"){
-//        currentStep +=1
-//    }
     val scrollSate = rememberScrollState()
 
     Box(
@@ -106,21 +92,25 @@ fun OrderDetailScreen(
                 ShippingDetailCard(orderData)
 
                 Spacer(Modifier.height(8.dp))
-                OrderItemInThisOrderCard(orderList, orderData) {
-                    val jsonFormat = Json {
-                        ignoreUnknownKeys = true
-                    }   //for ignore all integer value
-                    val orderDateInJson = jsonFormat.encodeToString(orderData)
-                    val orderListJson = jsonFormat.encodeToString(orderList)
-                    navController.navigate(
-                        OrderDetailScreenRoute(
-                            orderData = orderDateInJson,
-                            orderList = orderListJson
-                        )
-                    )
-                }
+               val orderItemInThisCart =  orderList.filter { it.order_date == orderData.order_date }
+                    .filter { it.order_id != orderData.order_id }
+                if(orderItemInThisCart.isNotEmpty()) {
 
-                Spacer(Modifier.height(8.dp))
+                    OrderItemInThisOrderCard(orderItemInThisCart) {
+                        val jsonFormat = Json {
+                            ignoreUnknownKeys = true
+                        }   //for ignore all integer value
+                        val orderDateInJson = jsonFormat.encodeToString(orderData)
+                        val orderListJson = jsonFormat.encodeToString(orderList)
+                        navController.navigate(
+                            OrderDetailScreenRoute(
+                                orderData = orderDateInJson,
+                                orderList = orderListJson
+                            )
+                        )
+                    }
+                    Spacer(Modifier.height(8.dp))
+                }
                 PriceDetailCard(orderData)
 
 
@@ -372,7 +362,7 @@ fun ProductDetailCard(orderData: MedicalOrderResponseItem) {
                         {
                             Text(
                                 "Out of Delivery  ${
-                                    if (orderData.out_of_delivery_date != "null") 
+                                    if (orderData.out_of_delivery_date != "null")
                                         orderData.out_of_delivery_date.substring(0, 10) else ""
                                 }"
                             )
@@ -483,7 +473,7 @@ fun ShippingDetailCard(orderData: MedicalOrderResponseItem) {
             )
             Spacer(Modifier.height(8.dp))
             Text(
-                text = "Pincode : ${orderData.user_pinCode}", style = TextStyle(
+                text = "PinCode : ${orderData.user_pinCode}", style = TextStyle(
                     color = Color.Black,
                     fontSize = 14.sp,
                     fontFamily = FontFamily(Font(R.font.roboto_light)),
@@ -498,8 +488,7 @@ fun ShippingDetailCard(orderData: MedicalOrderResponseItem) {
 
 @Composable
 fun OrderItemInThisOrderCard(
-    orderList: List<MedicalOrderResponseItem>,
-    orderData: MedicalOrderResponseItem,
+    orderItemInThisCart: List<MedicalOrderResponseItem>,
     onClick: () -> Unit
 ) {
     Card(
@@ -533,7 +522,7 @@ fun OrderItemInThisOrderCard(
                     .fillMaxWidth()
                     .height(200.dp)
             ) {
-                items(orderList.filter { it.order_date == orderData.order_date }) {
+                items(orderItemInThisCart) {
                     OrderCardView(it) {
                         onClick()
                     }

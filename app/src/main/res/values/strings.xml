@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">MyMedicalShopUser</string>
+    <string name="app_name">Medicare</string>
     <string name="cart_rs">%1$s ₹</string>
     <string name="rs">₹</string>
 
