@@ -314,7 +314,7 @@ fun HomeScreen(
                                 LazyRow(
                                     modifier = Modifier.fillMaxWidth()
                                 ) {
-                                    items(filterProductList) {
+                                    items(filterProductList.reversed()) {
                                         ClientItemView(
                                             itemImage = it.product_image_id,
                                             price = it.product_price,

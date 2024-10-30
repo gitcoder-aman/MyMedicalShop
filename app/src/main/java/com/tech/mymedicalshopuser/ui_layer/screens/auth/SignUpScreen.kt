@@ -67,9 +67,9 @@ fun SignupScreen(
             LaunchedEffect(Unit) {
                 if (signupResponseState.data!!.status == ISOK) {
                 val userId = signupResponseState.data!!.message
-//                    navController.navigate(SignInRoute)
 
                     preferenceManager.setLoginUserId(userId)
+                    preferenceManager.setLoginEmailId(signupScreenState.email.value)
 
                     navController.navigate(
                         VerificationScreenRoute(userId)
