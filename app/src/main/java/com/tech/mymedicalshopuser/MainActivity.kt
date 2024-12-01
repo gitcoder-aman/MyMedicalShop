@@ -18,7 +18,6 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-    @OptIn(DelicateCoroutinesApi::class)
     @SuppressLint("CoroutineCreationDuringComposition")
 
     override fun onCreate(savedInstanceState: Bundle?) {
